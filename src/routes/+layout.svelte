@@ -1,5 +1,6 @@
 <script>
     import "../app.css";
+    import ThemeToggle from "$lib/components/ThemeToggle.svelte";
 </script>
 
 <div
@@ -34,7 +35,7 @@
                 >
             </a>
             <div class="flex items-center gap-4">
-                <!-- Theme toggle removed to lock Premium Black & Gold style -->
+                <ThemeToggle />
             </div>
         </div>
     </header>

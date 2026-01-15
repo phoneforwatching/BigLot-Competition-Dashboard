@@ -39,7 +39,9 @@
         isRefreshing = false;
     }
 
-    function formatMoney(amount: number) {
+    function formatMoney(amount: number | undefined | null) {
+        if (amount === undefined || amount === null || isNaN(amount))
+            return "0.00";
         return amount.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -1460,7 +1462,7 @@
                                         <div
                                             class="text-xl font-bold text-green-600 dark:text-green-400"
                                         >
-                                            ${trader.stats.avgWin}
+                                            ${formatMoney(trader.stats.avgWin)}
                                         </div>
                                     </div>
                                     <div
@@ -1474,7 +1476,7 @@
                                         <div
                                             class="text-xl font-bold text-red-600 dark:text-red-400"
                                         >
-                                            ${trader.stats.avgLoss}
+                                            ${formatMoney(trader.stats.avgLoss)}
                                         </div>
                                     </div>
                                     <div
@@ -1572,9 +1574,9 @@
                                             {trader.stats.sessionAsianProfit >=
                                             0
                                                 ? "+"
-                                                : ""}{Number(
+                                                : ""}{formatMoney(
                                                 trader.stats.sessionAsianProfit,
-                                            ).toFixed(2)}
+                                            )}
                                         </span>
                                     </div>
                                 </div>
@@ -1623,10 +1625,10 @@
                                             {trader.stats.sessionLondonProfit >=
                                             0
                                                 ? "+"
-                                                : ""}{Number(
+                                                : ""}{formatMoney(
                                                 trader.stats
                                                     .sessionLondonProfit,
-                                            ).toFixed(2)}
+                                            )}
                                         </span>
                                     </div>
                                 </div>
@@ -1675,10 +1677,10 @@
                                             {trader.stats
                                                 .sessionNewYorkProfit >= 0
                                                 ? "+"
-                                                : ""}{Number(
+                                                : ""}{formatMoney(
                                                 trader.stats
                                                     .sessionNewYorkProfit,
-                                            ).toFixed(2)}
+                                            )}
                                         </span>
                                     </div>
                                 </div>

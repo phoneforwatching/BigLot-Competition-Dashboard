@@ -131,7 +131,7 @@ export const leaderboardData: LeaderboardEntry[] = [
     nickname: 'CryptoKing',
     points: 1450,
     profit: 980.00,
-    stats: { winRate: 55.0, profitFactor: 1.8, rrRatio: 1.2, maxDrawdown: 25.0, totalTrades: 89, avgWin: 200, avgLoss: -150 },
+    stats: { winRate: 55.0, profitFactor: 1.8, rrRatio: 1.2, maxDrawdown: 25.0, totalTrades: 89, avgWin: 200, avgLoss: -150, bestTrade: 350, worstTrade: -180 },
     equityCurve: generateEquity(10000, 20),
     history: generateHistory(10),
     dailyHistory: generateDailyHistory(30)
@@ -141,7 +141,7 @@ export const leaderboardData: LeaderboardEntry[] = [
     nickname: 'MoonWalker',
     points: 1400,
     profit: -150.00,
-    stats: { winRate: 40.0, profitFactor: 0.8, rrRatio: 0.7, maxDrawdown: 45.0, totalTrades: 200, avgWin: 50, avgLoss: -60 },
+    stats: { winRate: 40.0, profitFactor: 0.8, rrRatio: 0.7, maxDrawdown: 45.0, totalTrades: 200, avgWin: 50, avgLoss: -60, bestTrade: 120, worstTrade: -150 },
     equityCurve: generateEquity(10000, 20),
     history: generateHistory(10),
     dailyHistory: generateDailyHistory(30)
@@ -151,7 +151,7 @@ export const leaderboardData: LeaderboardEntry[] = [
     nickname: 'HODLer',
     points: 1350,
     profit: 500.25,
-    stats: { winRate: 50.0, profitFactor: 1.2, rrRatio: 1.1, maxDrawdown: 10.0, totalTrades: 50, avgWin: 100, avgLoss: -90 },
+    stats: { winRate: 50.0, profitFactor: 1.2, rrRatio: 1.1, maxDrawdown: 10.0, totalTrades: 50, avgWin: 100, avgLoss: -90, bestTrade: 100, worstTrade: -90 },
     equityCurve: generateEquity(10000, 20),
     history: generateHistory(10),
     dailyHistory: generateDailyHistory(30)

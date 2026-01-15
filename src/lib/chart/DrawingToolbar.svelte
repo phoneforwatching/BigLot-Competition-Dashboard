@@ -109,7 +109,7 @@
                 on:click={() => selectTool(tool.id as DrawingTool)}
                 class="flex items-center justify-center gap-1.5 min-w-[44px] min-h-[44px] px-3 py-2 rounded-lg text-sm font-medium transition-all
                     {activeTool === tool.id
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    ? 'bg-gold-600 text-white shadow-lg shadow-gold-600/30'
                     : 'text-gray-400 hover:bg-gray-700 hover:text-white active:bg-gray-600'}"
                 title="{tool.description} ({tool.shortcut})"
             >
@@ -170,7 +170,7 @@
     <!-- Status/Instructions -->
     <div class="ml-auto flex items-center gap-2 text-[11px] text-gray-500">
         {#if isDrawing}
-            <span class="text-blue-400"> Drag to draw • </span>
+            <span class="text-gold-400"> Drag to draw • </span>
             <kbd class="px-1 py-0.5 bg-gray-700 rounded text-[10px]">ESC</kbd>
             <span>cancel</span>
         {:else if activeTool !== "none" && activeTool !== "select"}
@@ -179,7 +179,7 @@
             >
             <kbd class="px-1 py-0.5 bg-gray-700 rounded text-[10px]">ESC</kbd>
         {:else if selectedId}
-            <span class="hidden sm:inline text-blue-400">Drag to move</span>
+            <span class="hidden sm:inline text-gold-400">Drag to move</span>
             <kbd class="px-1 py-0.5 bg-gray-700 rounded text-[10px]">DEL</kbd>
             <span>delete</span>
         {:else}

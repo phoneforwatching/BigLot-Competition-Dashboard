@@ -18,11 +18,11 @@
 
   function getRankStyle(rank: number): string {
     if (rank === 1)
-      return "bg-yellow-100 dark:bg-yellow-400 border-yellow-400 dark:border-yellow-500 text-yellow-900 dark:text-black shadow-sm dark:shadow-yellow-500/50 font-bold";
+      return "bg-gold-500/10 dark:bg-gold-500/20 border-gold-500 dark:border-gold-500 text-gold-600 dark:text-gold-400 shadow-[0_0_20px_rgba(243,156,18,0.2)] dark:shadow-[0_0_30px_rgba(243,156,18,0.15)] font-bold";
     if (rank === 2)
-      return "bg-gray-100 dark:bg-gray-300 border-gray-400 dark:border-gray-400 text-gray-900 dark:text-black font-bold";
+      return "bg-gold-500/5 dark:bg-gold-500/10 border-gold-600/50 dark:border-gold-600/50 text-gold-700 dark:text-gold-300 font-bold";
     if (rank === 3)
-      return "bg-orange-100 dark:bg-orange-400 border-orange-400 dark:border-orange-500 text-orange-900 dark:text-black font-bold";
+      return "bg-gold-500/5 dark:bg-gold-500/10 border-gold-700/30 dark:border-gold-700/30 text-gold-800 dark:text-gold-200 font-bold";
     return "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-dark-border/50";
   }
 

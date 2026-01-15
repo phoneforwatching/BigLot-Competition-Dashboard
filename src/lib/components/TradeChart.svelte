@@ -288,7 +288,7 @@
 
         // 3. Add Lines
         entryLine = chart.addLineSeries({
-            color: "#3B82F6",
+            color: "#f39c12",
             lineWidth: 2,
             lineStyle: LineStyle.Dashed,
             title: "Entry",
@@ -341,7 +341,7 @@
                 class="absolute inset-0 bg-gray-900/50 flex items-center justify-center z-10 backdrop-blur-sm"
             >
                 <div
-                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-gold-500"
                 ></div>
             </div>
         {/if}

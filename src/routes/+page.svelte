@@ -19,20 +19,26 @@
 
 <PullToRefresh {isRefreshing} on:refresh={handleRefresh}>
     <div
-        class="min-h-screen bg-gray-50 dark:bg-dark-bg py-8 px-4 sm:px-6 lg:px-8"
+        class="min-h-screen bg-white dark:bg-dark-bg py-12 px-4 sm:px-6 lg:px-8"
     >
         <div class="max-w-4xl mx-auto">
             <div
-                class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4"
+                class="flex flex-col sm:flex-row sm:items-center justify-between mb-12 gap-6"
             >
-                <div>
+                <div class="space-y-2">
                     <h1
-                        class="text-3xl font-bold text-gray-900 dark:text-white"
+                        class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white"
                     >
-                        Leaderboard
+                        Trading <span
+                            class="bg-gradient-to-r from-gold-600 to-gold-400 bg-clip-text text-transparent"
+                            >Leaderboard</span
+                        >
                     </h1>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">
-                        Top traders ranked by points and profit.
+                    <p
+                        class="text-base text-gray-600 dark:text-gold-500/80 max-w-2xl"
+                    >
+                        Real-time ranking of the most elite traders in the
+                        BigLot ecosystem.
                     </p>
                 </div>
             </div>

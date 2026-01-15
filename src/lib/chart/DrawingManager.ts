@@ -474,7 +474,7 @@ export class DrawingManager {
                 newDrawing = {
                     id, type: 'trendline',
                     start, end: endPoint,
-                    color: '#3B82F6', visible: true,
+                    color: '#f39c12', visible: true,
                 };
                 break;
             case 'hline':

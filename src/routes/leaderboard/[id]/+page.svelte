@@ -684,7 +684,7 @@
 
             // Add Entry Line (starts from entry point)
             entryLine = chart.addLineSeries({
-                color: "#3B82F6",
+                color: "#f39c12",
                 lineWidth: 2,
                 lineStyle: 2,
                 title: `Entry (${trade.type})`,
@@ -816,7 +816,7 @@
             <!-- Back Button -->
             <a
                 href="/"
-                class="inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 mb-6"
+                class="inline-flex items-center text-sm font-medium text-gold-600 dark:text-gold-400 hover:text-gold-500 dark:hover:text-gold-300 mb-6"
             >
                 &larr; Back to Leaderboard
             </a>
@@ -839,7 +839,7 @@
                 >
                     <div class="flex items-center gap-4">
                         <div
-                            class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-3xl"
+                            class="w-16 h-16 bg-gold-100 dark:bg-gold-900/30 rounded-full flex items-center justify-center text-3xl"
                         >
                             {getRankIcon(rank)}
                         </div>
@@ -924,7 +924,7 @@
                                     <div class="relative">
                                         <select
                                             bind:value={filterSymbol}
-                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
+                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
                                         >
                                             {#each uniqueSymbols as symbol}
                                                 <option value={symbol}
@@ -956,7 +956,7 @@
                                     <div class="relative">
                                         <select
                                             bind:value={filterType}
-                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
+                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
                                         >
                                             <option value="ALL"
                                                 >All Types</option
@@ -986,7 +986,7 @@
                                     <div class="relative">
                                         <select
                                             bind:value={filterOutcome}
-                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
+                                            class="appearance-none pl-3 pr-8 py-1.5 text-sm bg-gray-50 dark:bg-dark-bg/50 border border-gray-200 dark:border-dark-border rounded-lg text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 cursor-pointer hover:bg-gray-100 dark:hover:bg-dark-bg transition-colors"
                                         >
                                             <option value="ALL"
                                                 >All Outcomes</option
@@ -1051,12 +1051,12 @@
                                                 <button
                                                     on:click={() =>
                                                         handleSort("symbol")}
-                                                    class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                    class="flex items-center gap-1 hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                                                 >
                                                     Symbol
                                                     {#if sortColumn === "symbol"}
                                                         <span
-                                                            class="text-blue-600 dark:text-blue-400"
+                                                            class="text-gold-600 dark:text-gold-400"
                                                             >{sortDirection ===
                                                             "asc"
                                                                 ? "↑"
@@ -1074,12 +1074,12 @@
                                                 <button
                                                     on:click={() =>
                                                         handleSort("type")}
-                                                    class="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                    class="flex items-center gap-1 hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                                                 >
                                                     Type
                                                     {#if sortColumn === "type"}
                                                         <span
-                                                            class="text-blue-600 dark:text-blue-400"
+                                                            class="text-gold-600 dark:text-gold-400"
                                                             >{sortDirection ===
                                                             "asc"
                                                                 ? "↑"
@@ -1097,12 +1097,12 @@
                                                 <button
                                                     on:click={() =>
                                                         handleSort("lot")}
-                                                    class="flex items-center gap-1 ml-auto hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                    class="flex items-center gap-1 ml-auto hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                                                 >
                                                     Lot
                                                     {#if sortColumn === "lot"}
                                                         <span
-                                                            class="text-blue-600 dark:text-blue-400"
+                                                            class="text-gold-600 dark:text-gold-400"
                                                             >{sortDirection ===
                                                             "asc"
                                                                 ? "↑"
@@ -1120,12 +1120,12 @@
                                                 <button
                                                     on:click={() =>
                                                         handleSort("profit")}
-                                                    class="flex items-center gap-1 ml-auto hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                    class="flex items-center gap-1 ml-auto hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                                                 >
                                                     Profit
                                                     {#if sortColumn === "profit"}
                                                         <span
-                                                            class="text-blue-600 dark:text-blue-400"
+                                                            class="text-gold-600 dark:text-gold-400"
                                                             >{sortDirection ===
                                                             "asc"
                                                                 ? "↑"
@@ -1143,12 +1143,12 @@
                                                 <button
                                                     on:click={() =>
                                                         handleSort("closeTime")}
-                                                    class="flex items-center gap-1 ml-auto hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                                    class="flex items-center gap-1 ml-auto hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                                                 >
                                                     Time
                                                     {#if sortColumn === "closeTime"}
                                                         <span
-                                                            class="text-blue-600 dark:text-blue-400"
+                                                            class="text-gold-600 dark:text-gold-400"
                                                             >{sortDirection ===
                                                             "asc"
                                                                 ? "↑"
@@ -1167,7 +1167,7 @@
                                     <tbody>
                                         {#each sortedHistory as trade, i}
                                             <tr
-                                                class="border-b dark:border-dark-border hover:bg-blue-50/50 dark:hover:bg-blue-900/10 cursor-pointer transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] active:bg-blue-100 dark:active:bg-blue-900/20"
+                                                class="border-b dark:border-dark-border hover:bg-gold-50/50 dark:hover:bg-gold-900/10 cursor-pointer transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] active:bg-gold-100 dark:active:bg-gold-900/20"
                                                 on:click={() =>
                                                     openChart(trade)}
                                             >
@@ -1251,7 +1251,7 @@
                                         class="w-full bg-gray-200 dark:bg-dark-border rounded-full h-2 overflow-hidden"
                                     >
                                         <div
-                                            class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-700 ease-out"
+                                            class="bg-gold-600 dark:bg-gold-500 h-2 rounded-full transition-all duration-700 ease-out"
                                             style="width: {trader.stats
                                                 .winRate}%"
                                         ></div>
@@ -1510,7 +1510,7 @@
                                         class="w-full bg-gray-200 dark:bg-dark-border rounded-full h-1 mb-3"
                                     >
                                         <div
-                                            class="bg-blue-500 h-1 rounded-full"
+                                            class="bg-gold-500 h-1 rounded-full"
                                             style="width: {trader.stats
                                                 .sessionAsianWinRate}%"
                                         ></div>
@@ -1774,7 +1774,7 @@
                     <select
                         bind:value={currentTimeframe}
                         on:change={() => updateChartTimeframe(currentTimeframe)}
-                        class="bg-gray-700 text-white border border-gray-600 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="bg-gray-700 text-white border border-gray-600 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500"
                     >
                         {#each timeframes as tf}
                             <option value={tf.value}>{tf.label}</option>
@@ -1896,7 +1896,7 @@
             <!-- Legend -->
             <div class="p-4 bg-gray-50 dark:bg-dark-bg/50 flex gap-4 text-sm">
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-gold-500"></div>
                     <span class="text-gray-600 dark:text-gray-300"
                         >Entry ({selectedTrade?.type}): {Number(
                             selectedTrade?.openPrice || 0,

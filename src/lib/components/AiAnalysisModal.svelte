@@ -132,7 +132,7 @@
         >
             <!-- Header -->
             <div
-                class="px-6 py-4 border-b border-gray-100 dark:border-dark-border flex items-center justify-between bg-gradient-to-r from-purple-600 to-blue-600"
+                class="px-6 py-4 border-b border-gray-100 dark:border-dark-border flex items-center justify-between bg-gradient-to-r from-gold-600 to-gold-600"
             >
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">🤖</span>
@@ -178,8 +178,8 @@
                             <button
                                 class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all hover:scale-105 active:scale-95 {selectedType ===
                                 btn.type
-                                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                                    : 'border-gray-200 dark:border-dark-border hover:border-purple-300 dark:hover:border-purple-700'}"
+                                    ? 'border-gold-500 bg-gold-50 dark:bg-gold-900/20'
+                                    : 'border-gray-200 dark:border-dark-border hover:border-gold-300 dark:hover:border-gold-700'}"
                                 on:click={() => analyze(btn.type)}
                                 disabled={loading}
                             >
@@ -208,11 +208,11 @@
                             bind:value={customPrompt}
                             on:keydown={handleKeydown}
                             placeholder="เช่น: Session ไหนที่ควรเน้นเทรด?"
-                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                            class="flex-1 px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none transition-all"
                             disabled={loading}
                         />
                         <button
-                            class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-medium transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="px-6 py-3 bg-gold-600 hover:bg-gold-700 text-white rounded-xl font-medium transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                             on:click={handleCustomSubmit}
                             disabled={loading || !customPrompt.trim()}
                         >
@@ -235,10 +235,10 @@
                     >
                         <div class="relative">
                             <div
-                                class="w-16 h-16 border-4 border-purple-200 dark:border-purple-900 rounded-full"
+                                class="w-16 h-16 border-4 border-gold-200 dark:border-gold-900 rounded-full"
                             ></div>
                             <div
-                                class="w-16 h-16 border-4 border-transparent border-t-purple-600 rounded-full absolute inset-0 animate-spin"
+                                class="w-16 h-16 border-4 border-transparent border-t-gold-600 rounded-full absolute inset-0 animate-spin"
                             ></div>
                         </div>
                         <p
@@ -266,7 +266,7 @@
                 <!-- Analysis Result -->
                 {#if analysisResult && !loading}
                     <div
-                        class="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/10 dark:to-blue-900/10 rounded-xl p-6 border border-purple-100 dark:border-purple-800/30"
+                        class="bg-gradient-to-br from-gold-50 to-gold-50 dark:from-gold-900/10 dark:to-gold-900/10 rounded-xl p-6 border border-gold-100 dark:border-gold-800/30"
                     >
                         <!-- Copy Button -->
                         <div class="flex justify-end mb-4">
@@ -357,7 +357,7 @@
     :global(.prose h1),
     :global(.prose h2),
     :global(.prose h3) {
-        color: #7e22ce; /* purple-700 */
+        color: #f39c12; /* gold-700 */
         font-weight: 700;
         margin-top: 2em;
         margin-bottom: 0.75em;
@@ -366,7 +366,7 @@
     :global(.dark .prose h1),
     :global(.dark .prose h2),
     :global(.dark .prose h3) {
-        color: #d8b4fe; /* purple-300 */
+        color: #fbd485; /* gold-300 */
     }
 
     /* Lists */
@@ -428,11 +428,11 @@
 
     /* Strong/Bold */
     :global(.prose strong) {
-        color: #6b21a8; /* purple-800 */
+        color: #d68910; /* gold-800 */
         font-weight: 600;
     }
     :global(.dark .prose strong) {
-        color: #e9d5ff; /* purple-200 */
+        color: #fde9b8; /* gold-200 */
     }
 
     /* Code */
@@ -448,8 +448,8 @@
 
     /* Blockquotes */
     :global(.prose blockquote) {
-        border-left-color: #9333ea;
-        background-color: #f5f3ff; /* purple-50 */
+        border-left-color: #f39c12;
+        background-color: #fffcf0; /* gold-50 */
         padding: 1.25rem;
         border-radius: 0.5rem;
         font-style: normal;
@@ -458,7 +458,7 @@
     }
     :global(.dark .prose blockquote) {
         background-color: rgba(147, 51, 234, 0.1);
-        border-left-color: #a855f7;
+        border-left-color: #f39c12;
         color: #e5e7eb;
     }
 

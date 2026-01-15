@@ -38,7 +38,7 @@
 
                 <a
                     href="/"
-                    class="text-sm font-medium text-blue-600 hover:text-blue-500 flex items-center gap-1"
+                    class="text-sm font-medium text-gold-600 hover:text-gold-500 flex items-center gap-1"
                 >
                     &larr; Back to Home
                 </a>

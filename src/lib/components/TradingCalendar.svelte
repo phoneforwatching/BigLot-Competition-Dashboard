@@ -291,7 +291,7 @@
             <!-- Title & Navigation -->
             <div class="flex items-center gap-2">
                 <svg
-                    class="w-4 h-4 text-blue-500 flex-shrink-0"
+                    class="w-4 h-4 text-gold-500 flex-shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -350,7 +350,7 @@
                     </button>
                     <button
                         on:click={goToToday}
-                        class="ml-1 px-2 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                        class="ml-1 px-2 py-0.5 text-xs font-medium text-gold-600 dark:text-gold-400 bg-gold-50 dark:bg-gold-900/30 rounded hover:bg-gold-100 dark:hover:bg-gold-900/50 transition-colors"
                     >
                         Today
                     </button>
@@ -499,7 +499,7 @@
                     class="text-center text-[10px] font-semibold py-1 {i === 0
                         ? 'text-red-400'
                         : i === 6
-                          ? 'text-blue-400'
+                          ? 'text-gold-400'
                           : 'text-gray-400'}"
                 >
                     {day}
@@ -514,10 +514,10 @@
                     class="relative aspect-square flex flex-col items-center justify-center rounded transition-all duration-200 group
                         {day.isCurrentMonth ? '' : 'opacity-30'}
                         {day.isToday
-                        ? 'ring-2 ring-blue-500 ring-offset-1'
+                        ? 'ring-2 ring-gold-500 ring-offset-1'
                         : ''}
                         {day.data
-                        ? 'cursor-pointer hover:ring-2 hover:ring-blue-400 hover:scale-105 active:scale-95'
+                        ? 'cursor-pointer hover:ring-2 hover:ring-gold-400 hover:scale-105 active:scale-95'
                         : 'cursor-default'}
                         {getProfitColor(day.data?.profit || 0)}"
                     on:click={() => handleDayClick(day)}
@@ -525,7 +525,7 @@
                 >
                     <span
                         class="text-[10px] sm:text-xs font-medium {day.isToday
-                            ? 'text-blue-600 dark:text-blue-400'
+                            ? 'text-gold-600 dark:text-gold-400'
                             : 'text-gray-700 dark:text-gray-300'}"
                     >
                         {day.dayOfMonth}
@@ -685,7 +685,7 @@
                     </div>
                     <div class="p-2 bg-gray-50 dark:bg-dark-bg/50 rounded">
                         <div
-                            class="text-lg font-bold text-blue-600 dark:text-blue-400"
+                            class="text-lg font-bold text-gold-600 dark:text-gold-400"
                         >
                             {(selectedDay.data.winRate || 0).toFixed(0)}%
                         </div>

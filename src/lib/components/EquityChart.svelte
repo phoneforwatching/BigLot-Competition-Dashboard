@@ -141,13 +141,13 @@
             crosshair: {
                 mode: 1, // Magnet
                 vertLine: {
-                    color: "rgba(59, 130, 246, 0.5)",
+                    color: "rgba(243, 156, 18, 0.5)",
                     width: 1,
                     style: LineStyle.Dashed,
                     labelBackgroundColor: "#1F2937",
                 },
                 horzLine: {
-                    color: "rgba(59, 130, 246, 0.5)",
+                    color: "rgba(243, 156, 18, 0.5)",
                     width: 1,
                     style: LineStyle.Dashed,
                     labelBackgroundColor: "#1F2937",
@@ -180,17 +180,17 @@
 
         // Equity Line (gradient, primary)
         equitySeries = chart.addLineSeries({
-            color: "#3B82F6",
+            color: "#f39c12",
             lineWidth: 3,
             lineStyle: LineStyle.Solid,
             crosshairMarkerVisible: true,
             crosshairMarkerRadius: 5,
-            crosshairMarkerBorderColor: "#3B82F6",
+            crosshairMarkerBorderColor: "#f39c12",
             crosshairMarkerBackgroundColor: "#1F2937",
             title: "Equity",
             lastValueVisible: true,
             priceLineVisible: true,
-            priceLineColor: "#3B82F6",
+            priceLineColor: "#f39c12",
             priceLineStyle: LineStyle.Dashed,
         });
 
@@ -317,7 +317,7 @@
             <!-- Legend -->
             <div class="flex items-center gap-4 text-xs">
                 <div class="flex items-center gap-1.5">
-                    <span class="w-3 h-0.5 bg-blue-500 rounded"></span>
+                    <span class="w-3 h-0.5 bg-gold-500 rounded"></span>
                     <span class="text-gray-500 dark:text-gray-400">Equity</span>
                 </div>
                 <div class="flex items-center gap-1.5">
@@ -334,7 +334,7 @@
                 <button
                     class="px-3 py-1 text-xs font-medium rounded-md transition-all duration-200
                         {currentTimeframe === tf.label
-                        ? 'bg-white dark:bg-dark-surface text-blue-600 dark:text-blue-400 shadow-sm'
+                        ? 'bg-white dark:bg-dark-surface text-gold-600 dark:text-gold-400 shadow-sm'
                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}"
                     on:click={() => selectTimeframe(tf.label)}
                 >
@@ -372,7 +372,7 @@
                 <!-- Equity -->
                 <div class="flex items-center justify-between mb-1.5">
                     <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                        <span class="w-2 h-2 bg-gold-500 rounded-full"></span>
                         <span class="text-gray-300">Equity</span>
                     </div>
                     <span class="font-mono font-semibold text-white">
@@ -514,7 +514,7 @@
                     Peak
                 </div>
                 <div
-                    class="font-mono font-semibold text-blue-600 dark:text-blue-400"
+                    class="font-mono font-semibold text-gold-600 dark:text-gold-400"
                 >
                     ${formatMoney(maxEquity)}
                 </div>

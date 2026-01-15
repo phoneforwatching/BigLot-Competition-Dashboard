@@ -21,7 +21,7 @@
 
     // Colors
     const COLORS = {
-        trendline: "#3B82F6",
+        trendline: "#f39c12",
         hline: "#FBBF24",
         fib: "#8B5CF6",
         rect: "#10B981",
@@ -38,7 +38,7 @@
         "#84CC16",
         "#22C55E",
         "#14B8A6",
-        "#3B82F6",
+        "#f39c12",
     ];
 
     function chartToScreen(point: Point): { x: number; y: number } | null {

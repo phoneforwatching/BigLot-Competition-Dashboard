@@ -1,0 +1,3 @@
+nickname,account_id,investor_password,server
+Trader1,12345678,investor123,ICMarkets-Demo
+Trader2,87654321,pass456,Exness-MT5-Real

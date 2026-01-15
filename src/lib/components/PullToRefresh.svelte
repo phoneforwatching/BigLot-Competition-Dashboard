@@ -237,9 +237,9 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-        color: white;
-        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        background: linear-gradient(135deg, #f39c12, #f1c40f);
+        color: black;
+        box-shadow: 0 4px 14px rgba(243, 156, 18, 0.4);
         transition: transform 0.1s ease-out;
     }
 

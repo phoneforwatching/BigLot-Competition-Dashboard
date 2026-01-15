@@ -1,125 +1,174 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import type { LeaderboardEntry } from "$lib/mock/leaderboard";
 
   export let data: LeaderboardEntry[] = [];
 
-  // Sort data: Points DESC, then Profit DESC
   $: sortedData = [...data].sort((a, b) => {
-    if (b.points !== a.points) {
-      return b.points - a.points;
-    }
+    if (b.points !== a.points) return b.points - a.points;
     return b.profit - a.profit;
   });
 
   function formatProfit(profit: number): string {
     const sign = profit > 0 ? "+" : "";
-    return `${sign}${profit.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `${sign}$${Math.abs(profit).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   }
 
   function getRankStyle(rank: number): string {
-    if (rank === 1)
-      return "bg-gold-500/10 dark:bg-gold-500/20 border-gold-500 dark:border-gold-500 text-gold-600 dark:text-gold-400 shadow-[0_0_20px_rgba(243,156,18,0.2)] dark:shadow-[0_0_30px_rgba(243,156,18,0.15)] font-bold";
-    if (rank === 2)
-      return "bg-gold-500/5 dark:bg-gold-500/10 border-gold-600/50 dark:border-gold-600/50 text-gold-700 dark:text-gold-300 font-bold";
-    if (rank === 3)
-      return "bg-gold-500/5 dark:bg-gold-500/10 border-gold-700/30 dark:border-gold-700/30 text-gold-800 dark:text-gold-200 font-bold";
-    return "bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-dark-border/50";
-  }
-
-  function getRankIcon(rank: number): string {
-    if (rank === 1) return "🥇";
-    if (rank === 2) return "🥈";
-    if (rank === 3) return "🥉";
-    return `#${rank}`;
+    if (rank === 1) return "from-gold-600/10 to-transparent";
+    if (rank === 2) return "from-gray-400/5 to-transparent";
+    if (rank === 3) return "from-orange-400/5 to-transparent";
+    return "";
   }
 </script>
 
-<div
-  class="hidden md:block w-full overflow-x-auto shadow-xl rounded-xl border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-surface/50 backdrop-blur-sm animate-fade-in-up"
->
-  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead
-      class="text-xs text-gray-700 dark:text-white uppercase bg-gray-50 dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border"
-    >
-      <tr>
-        <th scope="col" class="px-6 py-3">Rank</th>
-        <th scope="col" class="px-6 py-3">Nickname</th>
-        <th scope="col" class="px-6 py-3 text-right">Points</th>
-        <th scope="col" class="px-6 py-3 text-right">Profit (USD)</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#if sortedData.length === 0}
-        <tr>
-          <td colspan="4" class="px-6 py-4 text-center dark:text-gray-400"
-            >No participants yet.</td
-          >
+<div class="w-full">
+  <!-- Desktop Table -->
+  <div class="hidden md:block">
+    <table class="w-full text-left">
+      <thead>
+        <tr
+          class="border-b border-dark-border/50 text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold"
+        >
+          <th class="px-8 py-6">Rank</th>
+          <th class="px-6 py-6 font-black">Participant</th>
+          <th class="px-6 py-6 text-right">Points</th>
+          <th class="px-6 py-6 text-right">Profit</th>
+          <th class="px-8 py-6"></th>
         </tr>
-      {:else}
+      </thead>
+      <tbody class="divide-y divide-dark-border/30">
         {#each sortedData as entry, index}
           {@const rank = index + 1}
           <tr
-            class="border-b dark:border-dark-border/50 {getRankStyle(
+            class="group hover:bg-gradient-to-r {getRankStyle(
               rank,
-            )} transition-all duration-200 cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
-            style="animation: fadeInUp 0.4s ease-out forwards; animation-delay: {index *
-              0.05}s; opacity: 0;"
-            on:click={() => (window.location.href = `/leaderboard/${entry.id}`)}
+            )} hover:bg-gold-500/5 transition-all duration-300 cursor-pointer"
+            on:click={() => goto(`/leaderboard/${entry.id}`)}
           >
-            <td class="px-6 py-4 font-bold whitespace-nowrap">
-              <span class="text-lg">{getRankIcon(rank)}</span>
+            <td class="px-8 py-6">
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-sm font-mono font-black {rank <= 3
+                    ? 'text-gold-500'
+                    : 'text-gray-600'}"
+                >
+                  {rank.toString().padStart(2, "0")}
+                </span>
+                {#if rank === 1}
+                  <span
+                    class="w-1 h-4 bg-gold-500 rounded-full shadow-[0_0_8px_rgba(243,156,18,0.5)]"
+                  ></span>
+                {/if}
+              </div>
             </td>
-            <td class="px-6 py-4 font-medium whitespace-nowrap">
-              {entry.nickname}
+            <td class="px-6 py-6">
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-10 h-10 rounded-full bg-dark-bg border border-dark-border flex items-center justify-center text-lg group-hover:border-gold-500/50 transition-colors"
+                >
+                  {#if rank === 1}🤴{:else if rank === 2}🥈{:else if rank === 3}🥉{:else}👤{/if}
+                </div>
+                <div>
+                  <div
+                    class="font-black text-gray-900 dark:text-white uppercase tracking-tight group-hover:text-gold-400 transition-colors"
+                  >
+                    {entry.nickname}
+                  </div>
+                  <div
+                    class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
+                  >
+                    {rank <= 10 ? "Market Master" : "Challenger"}
+                  </div>
+                </div>
+              </div>
             </td>
-            <td class="px-6 py-4 text-right font-bold">
-              {entry.points.toLocaleString()}
+            <td class="px-6 py-6 text-right">
+              <span
+                class="text-lg font-black text-gray-900 dark:text-white tabular-nums"
+              >
+                {entry.points.toLocaleString()}
+              </span>
             </td>
-            <td
-              class="px-6 py-4 text-right font-mono {entry.profit >= 0
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-red-600 dark:text-red-400'}"
-            >
-              {formatProfit(entry.profit)}
+            <td class="px-6 py-6 text-right tabular-nums">
+              <span
+                class="font-mono font-bold {entry.profit >= 0
+                  ? 'text-green-500'
+                  : 'text-red-500'}"
+              >
+                {formatProfit(entry.profit)}
+              </span>
+            </td>
+            <td class="px-8 py-6 text-right">
+              <div
+                class="opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 transition-transform"
+              >
+                <span
+                  class="inline-flex items-center gap-1 text-xs font-black text-gold-500 uppercase tracking-tighter"
+                >
+                  View Profile
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </span>
+              </div>
             </td>
           </tr>
         {/each}
-      {/if}
-    </tbody>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
 
-<!-- Mobile Card View -->
-<div class="md:hidden space-y-4 mt-4">
-  {#each sortedData as entry, index}
-    {@const rank = index + 1}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div
-      class="p-4 rounded-lg shadow border {getRankStyle(
-        rank,
-      )} flex justify-between items-center cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-      style="animation: fadeInUp 0.4s ease-out forwards; animation-delay: {index *
-        0.05}s; opacity: 0;"
-      on:click={() => (window.location.href = `/leaderboard/${entry.id}`)}
-    >
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">{getRankIcon(rank)}</span>
-        <div>
-          <div class="font-bold">{entry.nickname}</div>
-          <div class="text-xs opacity-75">Rank {rank}</div>
+  <!-- Mobile List View -->
+  <div class="md:hidden space-y-3 p-4">
+    {#each sortedData as entry, index}
+      {@const rank = index + 1}
+      <button
+        class="w-full flex items-center justify-between p-5 rounded-2xl bg-dark-surface/50 border border-dark-border active:scale-95 transition-all text-left"
+        on:click={() => goto(`/leaderboard/${entry.id}`)}
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="text-lg font-black {rank <= 3
+              ? 'text-gold-500'
+              : 'text-gray-600'} w-6"
+          >
+            {rank}
+          </div>
+          <div>
+            <div class="font-black text-white uppercase tracking-tighter">
+              {entry.nickname}
+            </div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-widest">
+              {entry.points.toLocaleString()} pts
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="text-right">
-        <div class="font-bold">{entry.points.toLocaleString()} pts</div>
-        <div
-          class="font-mono text-sm {entry.profit >= 0
-            ? 'text-green-600 dark:text-green-400'
-            : 'text-red-600 dark:text-red-400'}"
-        >
-          {formatProfit(entry.profit)}
+        <div class="text-right">
+          <div
+            class="font-mono font-bold {entry.profit >= 0
+              ? 'text-green-500'
+              : 'text-red-500'}"
+          >
+            {formatProfit(entry.profit)}
+          </div>
+          <div
+            class="text-[10px] text-gray-500 uppercase tracking-widest italic"
+          >
+            Profit
+          </div>
         </div>
-      </div>
-    </div>
-  {/each}
+      </button>
+    {/each}
+  </div>
 </div>

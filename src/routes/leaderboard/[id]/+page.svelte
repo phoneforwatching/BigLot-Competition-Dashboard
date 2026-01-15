@@ -813,12 +813,27 @@
         class="min-h-screen bg-gray-50 dark:bg-dark-bg py-8 px-4 sm:px-6 lg:px-8"
     >
         <div class="max-w-5xl mx-auto">
-            <!-- Back Button -->
+            <!-- Premium Back Button -->
             <a
                 href="/"
-                class="inline-flex items-center text-sm font-medium text-gold-600 dark:text-gold-400 hover:text-gold-500 dark:hover:text-gold-300 mb-6"
+                class="group mb-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white dark:bg-dark-surface/50 border border-gray-100 dark:border-dark-border text-gray-500 dark:text-gray-400 hover:text-gold-600 dark:hover:text-gold-400 hover:border-gold-500/30 transition-all shadow-sm active:scale-95"
             >
-                &larr; Back to Leaderboard
+                <svg
+                    class="w-5 h-5 transition-transform group-hover:-translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                </svg>
+                <span class="text-sm font-bold tracking-wide"
+                    >Back to Rankings</span
+                >
             </a>
 
             {#if !trader}
@@ -833,43 +848,75 @@
                     </p>
                 </div>
             {:else}
-                <!-- Header -->
+                <!-- Premium Header -->
                 <div
-                    class="bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-gray-100 dark:border-dark-border p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 animate-fade-in-up card-hover"
+                    class="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl border border-gray-100 dark:border-dark-border p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 animate-fade-in-up relative overflow-hidden group"
                 >
-                    <div class="flex items-center gap-4">
+                    <!-- Background Accent -->
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-gold-500/5 blur-[80px] rounded-full -z-10 transition-opacity opacity-50 group-hover:opacity-100"
+                    ></div>
+
+                    <div class="flex items-center gap-6">
                         <div
-                            class="w-16 h-16 bg-gold-100 dark:bg-gold-900/30 rounded-full flex items-center justify-center text-3xl"
+                            class="w-24 h-24 bg-gradient-to-br from-gold-500/20 to-gold-500/5 dark:bg-gold-900/30 rounded-2xl flex items-center justify-center text-4xl border-2 border-gold-500/30 shadow-lg"
                         >
                             {getRankIcon(rank)}
                         </div>
                         <div>
-                            <h1
-                                class="text-3xl font-bold text-gray-900 dark:text-white"
+                            <div class="flex items-center gap-3 mb-2">
+                                <h1
+                                    class="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase"
+                                >
+                                    {trader.nickname}
+                                </h1>
+                                {#if rank <= 3}
+                                    <span
+                                        class="px-3 py-1 bg-gold-500 text-black text-[10px] font-black rounded-full uppercase tracking-tighter"
+                                        >Elite Member</span
+                                    >
+                                {/if}
+                            </div>
+                            <div
+                                class="flex items-center gap-4 text-sm font-medium"
                             >
-                                {trader.nickname}
-                            </h1>
-                            <p class="text-gray-500 dark:text-gray-300">
-                                Rank {rank} • {trader.points.toLocaleString()} Points
-                            </p>
+                                <span class="text-gold-600 dark:text-gold-400"
+                                    >Rank #{rank} World</span
+                                >
+                                <span
+                                    class="w-1.5 h-1.5 bg-gray-300 dark:bg-dark-border rounded-full"
+                                ></span>
+                                <span class="text-gray-500 dark:text-gray-400"
+                                    >{trader.points.toLocaleString()} Competition
+                                    Points</span
+                                >
+                            </div>
                         </div>
                     </div>
-                    <div class="text-right">
+
+                    <div class="flex flex-col items-start md:items-end gap-1">
                         <p
-                            class="text-sm text-gray-500 dark:text-gray-300 uppercase tracking-wide"
+                            class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-[0.2em]"
                         >
-                            Total Profit
+                            Net Profit/Loss
                         </p>
-                        <p
-                            class="text-3xl font-mono font-bold {trader.profit >=
-                            0
-                                ? 'text-green-600 dark:text-green-400'
-                                : 'text-red-600 dark:text-red-400'}"
-                        >
-                            {trader.profit >= 0 ? "+" : ""}{formatMoney(
-                                trader.profit,
-                            )}
-                        </p>
+                        <div class="flex items-baseline gap-2">
+                            <span
+                                class="text-4xl font-mono font-black {trader.profit >=
+                                0
+                                    ? 'text-green-500'
+                                    : 'text-red-500'}"
+                            >
+                                {trader.profit >= 0 ? "+" : ""}{formatMoney(
+                                    trader.profit,
+                                )}
+                            </span>
+                            <span
+                                class="text-sm font-bold {trader.profit >= 0
+                                    ? 'text-green-500/60'
+                                    : 'text-red-500/60'}">USD</span
+                            >
+                        </div>
                     </div>
                 </div>
 

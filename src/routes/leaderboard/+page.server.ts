@@ -4,11 +4,16 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
     // Phase 2: Fetch from Supabase
+    console.log('🔍 Leaderboard: Starting Supabase fetch...');
+    console.log('🔍 Supabase client exists:', !!supabase);
+
     try {
         if (!supabase) {
+            console.error('❌ Supabase client is null/undefined');
             throw new Error('Supabase client not initialized');
         }
 
+        console.log('🔍 Fetching daily_stats with participants...');
         const { data, error } = await supabase
             .from('daily_stats')
             .select(`
@@ -18,8 +23,11 @@ export const load: PageServerLoad = async () => {
             .order('date', { ascending: false })
             .order('points', { ascending: false });
 
+        console.log('🔍 Supabase response - error:', error);
+        console.log('🔍 Supabase response - data count:', data?.length || 0);
 
         if (!error && data && data.length > 0) {
+            console.log('✅ Using real Supabase data!');
             // Filter to keep only the latest entry per participant
             const latestEntries = new Map();
             data.forEach((entry: any) => {

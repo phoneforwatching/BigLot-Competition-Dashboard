@@ -9,7 +9,7 @@
 
 <button
     on:click={theme.toggle}
-    class="p-2 rounded-lg bg-gray-100 dark:bg-dark-surface-light text-gray-800 dark:text-gold-400 hover:bg-gold-50 dark:hover:bg-gold-900/20 border border-gray-200 dark:border-dark-border hover:border-gold-300 dark:hover:border-gold-500/50 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-gold-500/50"
+    class="hidden p-2 rounded-lg bg-gray-100 dark:bg-dark-surface-light text-gray-800 dark:text-gold-400 hover:bg-gold-50 dark:hover:bg-gold-900/20 border border-gray-200 dark:border-dark-border hover:border-gold-300 dark:hover:border-gold-500/50 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-gold-500/50"
     aria-label="Toggle Dark Mode"
 >
     {#if $theme === "light"}

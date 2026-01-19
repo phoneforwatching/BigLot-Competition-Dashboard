@@ -1,7 +1,7 @@
 import time
 import MetaTrader5 as mt5
 from datetime import datetime, timezone, timedelta
-from core import init_mt5, get_supabase_client, load_env, send_telegram_message, get_utc_offset
+from core import init_mt5, get_supabase_client, load_env, send_telegram_message
 import os
 
 # Load environment variables
@@ -40,7 +40,8 @@ def sync_timeframe(symbol: str, tf_name: str, mt5_tf: int, count: int):
     market_data = []
     for rate in rates:
         # Convert MT5 server time (UTC+3) to UTC
-        dt = datetime.fromtimestamp(rate['time'] + get_utc_offset(), tz=timezone.utc)
+        # Convert MT5 server time (UTC+3) to UTC - offset is -10800 seconds
+        dt = datetime.fromtimestamp(rate['time'] - 10800, tz=timezone.utc)
         
         market_data.append({
             "symbol": "XAUUSD",  # Normalized symbol

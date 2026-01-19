@@ -19,9 +19,14 @@ export const load: PageServerLoad = async ({ params }) => {
             .single();
 
 
-        if (!pError && participant) {
+        if (pError || !participant) {
+            console.error(`Participant fetch failed for ID ${id}:`, pError);
+            throw new Error(pError?.message || 'Participant not found');
+        }
+
+        if (participant) {
             // Fetch latest stats
-            const { data: stats } = await supabase
+            const { data: stats, error: sError } = await supabase
                 .from('daily_stats')
                 .select('*')
                 .eq('participant_id', id)
@@ -29,38 +34,48 @@ export const load: PageServerLoad = async ({ params }) => {
                 .limit(1)
                 .single();
 
+            if (sError) console.error(`Stats fetch error for ID ${id}:`, sError);
+
             // Fetch history
-            const { data: history } = await supabase
+            const { data: history, error: hError } = await supabase
                 .from('trades')
                 .select('*')
                 .eq('participant_id', id)
                 .order('close_time', { ascending: false })
                 .limit(50);
 
+            if (hError) console.error(`Trades fetch error for ID ${id}:`, hError);
+
             // Fetch equity curve (all daily stats - for fallback)
-            const { data: equityData } = await supabase
+            const { data: equityData, error: eError } = await supabase
                 .from('daily_stats')
                 .select('equity, date')
                 .eq('participant_id', id)
                 .order('date', { ascending: true });
 
+            if (eError) console.error(`Equity curve fetch error for ID ${id}:`, eError);
+
             // Fetch detailed equity snapshots (MyFxBook-style)
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-            const { data: equitySnapshots } = await supabase
+            const { data: equitySnapshots, error: esError } = await supabase
                 .from('equity_snapshots')
                 .select('timestamp, balance, equity, floating_pl')
                 .eq('participant_id', id)
                 .gte('timestamp', thirtyDaysAgo.toISOString())
                 .order('timestamp', { ascending: true });
 
+            if (esError) console.error(`Equity snapshots fetch error for ID ${id}:`, esError);
+
             // Fetch ALL trades for Trading Calendar (calculate daily profit from trade history)
-            const { data: allTrades } = await supabase
+            const { data: allTrades, error: atError } = await supabase
                 .from('trades')
                 .select('close_time, profit')
                 .eq('participant_id', id)
                 .order('close_time', { ascending: true });
+
+            if (atError) console.error(`All trades fetch error for ID ${id}:`, atError);
 
             // Calculate daily stats from trades
             const dailyStatsFromTrades = (() => {
@@ -159,10 +174,12 @@ export const load: PageServerLoad = async ({ params }) => {
                     if (!stats) return 0;
 
                     // Fetch all stats for the same date to calculate rank
-                    const { data: allStats } = await supabase
+                    const { data: allStats, error: rError } = await supabase
                         .from('daily_stats')
                         .select('points, profit')
                         .eq('date', stats.date);
+
+                    if (rError) console.error(`Rank fetch error for date ${stats.date}:`, rError);
 
                     if (!allStats) return 0;
 
@@ -177,7 +194,7 @@ export const load: PageServerLoad = async ({ params }) => {
             };
         }
     } catch (e) {
-        console.error('Supabase fetch failed, falling back to mock data:', e);
+        console.error('Supabase fetch failed detailed error:', e);
     }
 
     // Fallback to mock data

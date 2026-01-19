@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '$env/static/private';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = SUPABASE_URL || '';
+const supabaseAnonKey = SUPABASE_ANON_KEY || '';
 
 if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase URL or Anon Key is missing. Please check your .env file. Falling back to mock data.');

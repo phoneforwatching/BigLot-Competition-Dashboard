@@ -13,7 +13,7 @@ export const load: PageServerLoad = async () => {
             .from('daily_stats')
             .select(`
                 *,
-                participants (nickname, avatar_url)
+                participants (nickname)
             `)
             .order('date', { ascending: false })
             .order('points', { ascending: false });

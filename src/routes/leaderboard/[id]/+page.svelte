@@ -891,6 +891,13 @@
                                         >Elite Member</span
                                     >
                                 {/if}
+                                <button
+                                    on:click={() => (showAiModal = true)}
+                                    class="flex items-center gap-3 px-6 py-3 bg-gold-600 hover:bg-gold-700 text-white text-sm font-black rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold-500/30"
+                                >
+                                    <span class="text-lg">🤖</span>
+                                    AI Analysis
+                                </button>
                             </div>
                             <div
                                 class="flex items-center gap-4 text-sm font-medium"
@@ -1986,3 +1993,9 @@
         </div>
     </div>
 {/if}
+
+<AiAnalysisModal
+    bind:show={showAiModal}
+    {trader}
+    on:close={() => (showAiModal = false)}
+/>

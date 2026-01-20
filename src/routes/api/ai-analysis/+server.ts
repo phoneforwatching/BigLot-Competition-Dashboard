@@ -1,30 +1,23 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import OpenAI from 'openai';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { trader, analysisType, customPrompt, provider } = await request.json();
+        const { trader, analysisType, customPrompt } = await request.json();
 
         if (!trader) {
             return json({ error: 'Missing trader data' }, { status: 400 });
         }
 
-        const prompt = buildPrompt(trader, analysisType, customPrompt);
-        
-        let analysis = '';
-        
-        if (provider === 'gemini' && GEMINI_API_KEY) {
-            analysis = await analyzeWithGemini(prompt);
-        } else if (OPENAI_API_KEY) {
-            analysis = await analyzeWithOpenAI(prompt);
-        } else {
-            return json({ error: 'No AI provider configured. Please add OPENAI_API_KEY or GEMINI_API_KEY to your environment.' }, { status: 500 });
+        if (!OPENAI_API_KEY) {
+            return json({ error: 'OpenAI API Key is not configured.' }, { status: 500 });
         }
+
+        const prompt = buildPrompt(trader, analysisType, customPrompt);
+        const analysis = await analyzeWithOpenAI(prompt);
 
         return json({ analysis });
     } catch (error) {
@@ -78,30 +71,30 @@ function buildPrompt(trader: any, analysisType: string, customPrompt?: string): 
 - จุดเด่น/จุดแข็ง
 - จุดที่ควรปรับปรุง
 - ให้คะแนน Performance โดยรวม (1-10)`,
-        
+
         winrate: `วิเคราะห์ Win Rate และความสม่ำเสมอ:
 - Win Rate เหมาะสมหรือไม่กับ RR Ratio
 - เปรียบเทียบ Win Rate Long vs Short
 - ควรเน้น Trade ฝั่งไหนมากกว่า`,
-        
+
         risk: `วิเคราะห์ Risk Management:
 - Max Drawdown เหมาะสมหรือไม่
 - การจัดการความเสี่ยงต่อ Trade
 - มี Consecutive Losses มากไปหรือไม่
 - ข้อเสนอแนะในการปรับปรุง`,
-        
+
         trend: `วิเคราะห์ Trading Style:
 - รูปแบบการ Trade เหมาะกับสไตล์หรือไม่
 - Session ไหนทำกำไรได้ดี
 - ควรเน้น Trade Session ไหน
 - เวลาถือ Position เหมาะสมหรือไม่`,
-        
+
         compare: `เปรียบเทียบกับมาตรฐาน Professional Trader:
 - Win Rate 50%+ กับ RR 1:2 ขึ้นไป
 - Profit Factor > 1.5
 - Max Drawdown < 20%
 - ควรปรับปรุงอะไรให้ถึงระดับมืออาชีพ`,
-        
+
         custom: customPrompt || 'วิเคราะห์ข้อมูลนี้ตามที่เห็นสมควร'
     };
 
@@ -136,13 +129,4 @@ async function analyzeWithOpenAI(prompt: string): Promise<string> {
     });
 
     return response.choices[0]?.message?.content || 'ไม่สามารถสร้างการวิเคราะห์ได้';
-}
-
-async function analyzeWithGemini(prompt: string): Promise<string> {
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text() || 'ไม่สามารถสร้างการวิเคราะห์ได้';
 }

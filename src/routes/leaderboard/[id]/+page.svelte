@@ -2,7 +2,14 @@
     import { onMount, onDestroy } from "svelte";
     import { page } from "$app/stores";
     import { invalidateAll } from "$app/navigation";
-    import { createChart, ColorType } from "lightweight-charts";
+    import {
+        createChart,
+        ColorType,
+        CandlestickSeries,
+        LineSeries,
+        BaselineSeries,
+        createTextWatermark,
+    } from "lightweight-charts";
     import EquityChart from "$lib/components/EquityChart.svelte";
     import TradingCalendar from "$lib/components/TradingCalendar.svelte";
     import AiAnalysisModal from "$lib/components/AiAnalysisModal.svelte";
@@ -609,17 +616,23 @@
                         return `${day} ${month} ${hours}:${minutes}`;
                     },
                 },
-                watermark: {
-                    visible: true,
-                    fontSize: 48,
-                    horzAlign: "center",
-                    vertAlign: "center",
-                    color: "rgba(255, 255, 255, 0.1)",
-                    text: `${trade.symbol} M5`,
-                },
             });
 
-            candlestickSeries = chart.addCandlestickSeries({
+            // v5 Watermark implementation
+            const firstPane = chart.panes()[0];
+            createTextWatermark(firstPane, {
+                horzAlign: "center",
+                vertAlign: "center",
+                lines: [
+                    {
+                        text: `${trade.symbol} M5`,
+                        color: "rgba(255, 255, 255, 0.1)",
+                        fontSize: 48,
+                    },
+                ],
+            });
+
+            candlestickSeries = chart.addSeries(CandlestickSeries, {
                 upColor: "#10B981",
                 downColor: "#EF4444",
                 borderVisible: false,
@@ -685,7 +698,7 @@
             const entryStartTime = findNearestTime(entryTime);
 
             // Add Entry Line (starts from entry point)
-            entryLine = chart.addLineSeries({
+            entryLine = chart.addSeries(LineSeries, {
                 color: "#f39c12",
                 lineWidth: 2,
                 lineStyle: 2,
@@ -701,7 +714,7 @@
 
             // Add SL Line (starts from entry point)
             if (trade.sl > 0) {
-                slLine = chart.addLineSeries({
+                slLine = chart.addSeries(LineSeries, {
                     color: "#EF4444",
                     lineWidth: 2,
                     lineStyle: 2,
@@ -719,7 +732,7 @@
                 // For BUY: SL is below entry (fill bottom)
                 // For SELL: SL is above entry (fill top)
                 const isBuy = trade.type === "BUY";
-                const slZone = chart.addBaselineSeries({
+                const slZone = chart.addSeries(BaselineSeries, {
                     baseValue: { type: "price", price: trade.openPrice },
                     topLineColor: "rgba(239, 68, 68, 0)",
                     topFillColor1: isBuy
@@ -748,7 +761,7 @@
 
             // Add TP Line (starts from entry point)
             if (trade.tp > 0) {
-                tpLine = chart.addLineSeries({
+                tpLine = chart.addSeries(LineSeries, {
                     color: "#10B981",
                     lineWidth: 2,
                     lineStyle: 2,
@@ -766,7 +779,7 @@
                 // For BUY: TP is above entry (fill top)
                 // For SELL: TP is below entry (fill bottom)
                 const isBuy = trade.type === "BUY";
-                const tpZone = chart.addBaselineSeries({
+                const tpZone = chart.addSeries(BaselineSeries, {
                     baseValue: { type: "price", price: trade.openPrice },
                     topLineColor: "rgba(16, 185, 129, 0)",
                     topFillColor1: isBuy
@@ -1050,7 +1063,7 @@
                                                 class="h-4 w-4"
                                                 fill="none"
                                                 stroke="currentColor"
-                                                viewBox="0 24 24"
+                                                viewBox="0 0 24 24"
                                                 ><path
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"

@@ -1,6 +1,12 @@
 <script lang="ts">
     import { onMount, onDestroy, createEventDispatcher } from "svelte";
-    import { createChart, ColorType, LineStyle } from "lightweight-charts";
+    import {
+        createChart,
+        ColorType,
+        LineStyle,
+        AreaSeries,
+        LineSeries,
+    } from "lightweight-charts";
 
     // Props
     export let equitySnapshots: Array<{
@@ -158,7 +164,7 @@
         });
 
         // Floating P/L Zone (Area between equity and balance)
-        floatingZoneSeries = chart.addAreaSeries({
+        floatingZoneSeries = chart.addSeries(AreaSeries, {
             lineColor: "transparent",
             topColor: "rgba(16, 185, 129, 0.15)",
             bottomColor: "rgba(239, 68, 68, 0.15)",
@@ -167,7 +173,7 @@
         });
 
         // Balance Line (solid, secondary)
-        balanceSeries = chart.addLineSeries({
+        balanceSeries = chart.addSeries(LineSeries, {
             color: "#6B7280",
             lineWidth: 2,
             lineStyle: LineStyle.Solid,
@@ -179,7 +185,7 @@
         });
 
         // Equity Line (gradient, primary)
-        equitySeries = chart.addLineSeries({
+        equitySeries = chart.addSeries(LineSeries, {
             color: "#f39c12",
             lineWidth: 3,
             lineStyle: LineStyle.Solid,

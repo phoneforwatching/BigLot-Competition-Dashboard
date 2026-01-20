@@ -5,6 +5,9 @@
         ColorType,
         CrosshairMode,
         LineStyle,
+        CandlestickSeries,
+        LineSeries,
+        createTextWatermark,
     } from "lightweight-charts";
     import type { IChartApi, ISeriesApi } from "lightweight-charts";
     import { supabase } from "$lib/supabaseClient";
@@ -21,6 +24,7 @@
     let entryLine: any;
     let slLine: any;
     let tpLine: any;
+    let watermark: any;
 
     let isLoading = false;
     let baseM5Data: any[] = []; // Store the generated M5 data as base
@@ -195,12 +199,16 @@
                 // Update Watermark
                 const tfLabel =
                     timeframes.find((t) => t.value === tf)?.label || "M15";
-                const options: any = {
-                    watermark: {
-                        text: `${trade.symbol} ${tfLabel}`,
-                    },
-                };
-                chart.applyOptions(options);
+                if (watermark) {
+                    watermark.applyOptions({
+                        lines: [
+                            {
+                                text: `${trade.symbol} ${tfLabel}`,
+                                color: "rgba(255, 255, 255, 0.1)",
+                            },
+                        ],
+                    });
+                }
 
                 // Update Lines
                 if (processedData.length > 0) {
@@ -265,20 +273,26 @@
                 timeVisible: true,
                 secondsVisible: false,
             },
-            watermark: {
-                visible: true,
-                fontSize: 48,
-                horzAlign: "center",
-                vertAlign: "center",
-                color: "rgba(255, 255, 255, 0.1)",
-                text: `${trade.symbol} M15`,
-            },
         };
 
         chart = createChart(chartContainer, chartOptions);
 
+        // v5 Watermark implementation
+        const firstPane = chart.panes()[0];
+        watermark = createTextWatermark(firstPane, {
+            horzAlign: "center",
+            vertAlign: "center",
+            lines: [
+                {
+                    text: `${trade.symbol} M15`,
+                    color: "rgba(255, 255, 255, 0.1)",
+                    fontSize: 48,
+                },
+            ],
+        });
+
         // 2. Add Series
-        candlestickSeries = chart.addCandlestickSeries({
+        candlestickSeries = chart.addSeries(CandlestickSeries, {
             upColor: "#10B981",
             downColor: "#EF4444",
             borderVisible: false,
@@ -287,7 +301,7 @@
         });
 
         // 3. Add Lines
-        entryLine = chart.addLineSeries({
+        entryLine = chart.addSeries(LineSeries, {
             color: "#f39c12",
             lineWidth: 2,
             lineStyle: LineStyle.Dashed,
@@ -295,7 +309,7 @@
         });
 
         if (trade.sl > 0) {
-            slLine = chart.addLineSeries({
+            slLine = chart.addSeries(LineSeries, {
                 color: "#EF4444",
                 lineWidth: 2,
                 lineStyle: LineStyle.Dashed,
@@ -304,7 +318,7 @@
         }
 
         if (trade.tp > 0) {
-            tpLine = chart.addLineSeries({
+            tpLine = chart.addSeries(LineSeries, {
                 color: "#10B981",
                 lineWidth: 2,
                 lineStyle: LineStyle.Dashed,

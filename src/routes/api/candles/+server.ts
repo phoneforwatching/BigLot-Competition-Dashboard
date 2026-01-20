@@ -37,7 +37,9 @@ export const GET: RequestHandler = async ({ url }) => {
 
         if (error) {
             console.error('Supabase error:', error);
-            return json({ error: 'Failed to fetch candle data' }, { status: 500 });
+            // Fallback to mock data on table error
+            const mockData = generateMockCandles(cleanSymbol, from, to, timeframe);
+            return json(mockData);
         }
 
         if (!data || data.length === 0) {

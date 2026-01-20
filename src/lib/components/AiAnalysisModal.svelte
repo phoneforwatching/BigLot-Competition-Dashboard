@@ -121,6 +121,7 @@
         role="dialog"
         aria-modal="true"
         aria-label="AI Analysis Modal"
+        tabindex="-1"
     >
         <!-- Modal -->
         <div

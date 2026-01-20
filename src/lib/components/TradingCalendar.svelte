@@ -619,6 +619,7 @@
         on:keydown={(e) => e.key === "Escape" && closeDayModal()}
         role="dialog"
         aria-modal="true"
+        tabindex="-1"
     >
         <div
             class="bg-white dark:bg-dark-surface rounded-xl shadow-2xl max-w-sm w-full overflow-hidden modal-content"

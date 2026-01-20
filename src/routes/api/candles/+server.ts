@@ -36,8 +36,26 @@ export const GET: RequestHandler = async ({ url }) => {
 
 
         if (error) {
-            console.error('Supabase error:', error);
-            // Fallback to mock data on table error
+            console.warn(`Supabase error fetching from ${tableName} (Code: ${error.code}). Trying fallback table...`);
+
+            // If M1 failed, try the standard table
+            if (tableName === 'market_data_m1') {
+                const { data: fallbackData, error: fallbackError } = await supabase
+                    .from('market_data')
+                    .select('time, open, high, low, close, volume')
+                    .eq('symbol', cleanSymbol)
+                    .gte('time', from)
+                    .lte('time', to)
+                    .order('time', { ascending: true })
+                    .limit(5000);
+
+                if (!fallbackError && fallbackData && fallbackData.length > 0) {
+                    return json(fallbackData);
+                }
+            }
+
+            // Still nothing? Use mock data
+            console.log('No data found in any table, generating mock data...');
             const mockData = generateMockCandles(cleanSymbol, from, to, timeframe);
             return json(mockData);
         }

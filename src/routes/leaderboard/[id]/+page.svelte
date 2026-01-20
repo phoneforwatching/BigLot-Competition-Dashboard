@@ -1943,6 +1943,7 @@
                         style="height: 400px; touch-action: none;"
                         role="img"
                         aria-label="Interactive Market Chart"
+                        tabindex="0"
                     ></div>
 
                     <!-- Drawing Overlay -->

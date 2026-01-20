@@ -879,23 +879,25 @@
                             {getRankIcon(rank)}
                         </div>
                         <div>
-                            <div class="flex items-center gap-3 mb-2">
+                            <div
+                                class="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 sm:mb-2"
+                            >
                                 <h1
-                                    class="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase"
+                                    class="text-2xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase leading-tight"
                                 >
                                     {trader.nickname}
                                 </h1>
                                 {#if rank <= 3}
                                     <span
-                                        class="px-3 py-1 bg-gold-500 text-black text-[10px] font-black rounded-full uppercase tracking-tighter"
+                                        class="px-2 sm:px-3 py-0.5 sm:py-1 bg-gold-500 text-black text-[9px] sm:text-[10px] font-black rounded-full uppercase tracking-tighter whitespace-nowrap"
                                         >Elite Member</span
                                     >
                                 {/if}
                                 <button
                                     on:click={() => (showAiModal = true)}
-                                    class="flex items-center gap-3 px-6 py-3 bg-gold-600 hover:bg-gold-700 text-white text-sm font-black rounded-xl transition-all hover:scale-105 active:scale-95 shadow-lg shadow-gold-500/30"
+                                    class="flex items-center gap-2 px-3 py-1 bg-gold-600 hover:bg-gold-700 text-white text-[10px] sm:text-xs font-black rounded-lg transition-all hover:scale-105 active:scale-95 shadow-sm shadow-gold-500/20"
                                 >
-                                    <span class="text-lg">🤖</span>
+                                    <span>🤖</span>
                                     AI Analysis
                                 </button>
                             </div>

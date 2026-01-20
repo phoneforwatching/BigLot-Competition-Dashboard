@@ -17,7 +17,7 @@
     ];
 
     function formatProfit(profit: number): string {
-        const sign = profit > 0 ? "+" : "";
+        const sign = profit > 0 ? "+" : profit < 0 ? "-" : "";
         return `${sign}$${Math.abs(profit).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
     }
 

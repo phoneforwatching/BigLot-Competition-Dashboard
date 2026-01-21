@@ -39,7 +39,7 @@
         },
         2: {
             container:
-                "md:h-[25rem] bg-gradient-to-b from-slate-400/10 via-slate-500/5 to-transparent border-slate-400/30 shadow-[0_0_60px_rgba(148,163,184,0.1)]",
+                "md:h-[25rem] bg-gradient-to-b from-slate-400/10 via-slate-500/5 to-transparent border-slate-400/60 shadow-[0_0_60px_rgba(148,163,184,0.1)]",
             badge: "bg-gradient-to-br from-[#F8FAFC] via-[#94A3B8] to-[#475569] text-black shadow-[0_10px_20px_rgba(148,163,184,0.3)]",
             avatarBorder:
                 "border-slate-300 shadow-[0_0_20px_rgba(148,163,184,0.3)]",
@@ -61,7 +61,7 @@
 </script>
 
 <div
-    class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-24 items-end perspective-2000"
+    class="grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-x-4 md:gap-8 mb-24 items-end perspective-2000"
 >
     {#each podiumTraders as trader, i}
         {#if trader}

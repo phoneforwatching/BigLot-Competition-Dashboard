@@ -1,6 +1,7 @@
 <script>
     import "../app.css";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+    import AIAgent from "$lib/components/AIAgent.svelte";
     import { page } from "$app/stores";
 </script>
 
@@ -93,4 +94,6 @@
             </div>
         </div>
     </footer>
+
+    <AIAgent />
 </div>

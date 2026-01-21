@@ -6,18 +6,33 @@ const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI
 
 export const POST: RequestHandler = async ({ request }) => {
     try {
-        const { trader, analysisType, customPrompt } = await request.json();
+        const { trader, analysisType, customPrompt, messages } = await request.json();
 
-        if (!trader) {
-            return json({ error: 'Missing trader data' }, { status: 400 });
-        }
-
+        // Check API configuration
         if (!OPENAI_API_KEY) {
             return json({ error: 'OpenAI API Key is not configured.' }, { status: 500 });
         }
 
-        const prompt = buildPrompt(trader, analysisType, customPrompt);
-        const analysis = await analyzeWithOpenAI(prompt);
+        let aiMessages = [];
+
+        if (messages && Array.isArray(messages)) {
+            // Use provided chat history
+            aiMessages = messages.map((msg: any) => ({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.text
+            }));
+        } else {
+            // Fallback for single prompt legacy support or initial message
+            let prompt;
+            if (trader) {
+                prompt = buildPrompt(trader, analysisType, customPrompt);
+            } else {
+                prompt = customPrompt || 'สวัสดีครับ มีอะไรให้ผมช่วยเรื่องการเทรดวันนี้ไหมครับ?';
+            }
+            aiMessages.push({ role: 'user', content: prompt });
+        }
+
+        const analysis = await analyzeWithOpenAI(aiMessages, !!trader);
 
         return json({ analysis });
     } catch (error) {
@@ -107,23 +122,26 @@ ${analysisInstructions[analysisType] || analysisInstructions.overview}
 `;
 }
 
-async function analyzeWithOpenAI(prompt: string): Promise<string> {
+async function analyzeWithOpenAI(messages: any[], isTraderContext: boolean = false): Promise<string> {
     const openai = new OpenAI({
         apiKey: OPENAI_API_KEY
     });
 
+    const systemPrompt = isTraderContext
+        ? 'คุณเป็นผู้เชี่ยวชาญในการวิเคราะห์ Trading Performance ให้คำแนะนำที่เป็นประโยชน์และเข้าใจง่าย'
+        : 'คุณเป็นผู้ช่วยอัจฉริยะสำหรับการเทรด (AI Trading Assistant) ที่มีความรู้เรื่องการเงิน การลงทุน และการวิเคราะห์ทางเทคนิค ตอบคำถามเป็นภาษาไทยอย่างสุภาพและเป็นกันเอง';
+
+    const completionMessages = [
+        {
+            role: 'system',
+            content: systemPrompt
+        },
+        ...messages
+    ];
+
     const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
-        messages: [
-            {
-                role: 'system',
-                content: 'คุณเป็นผู้เชี่ยวชาญในการวิเคราะห์ Trading Performance ให้คำแนะนำที่เป็นประโยชน์และเข้าใจง่าย'
-            },
-            {
-                role: 'user',
-                content: prompt
-            }
-        ],
+        messages: completionMessages,
         max_tokens: 1500,
         temperature: 0.7
     });

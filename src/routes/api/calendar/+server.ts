@@ -1,7 +1,5 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import puppeteer from 'puppeteer';
-
 import type { EconomicEvent } from '$lib/data/calendarData';
 
 // Simple in-memory cache
@@ -45,10 +43,26 @@ export const GET: RequestHandler = async () => {
 async function scrapeForexFactory(): Promise<EconomicEvent[]> {
     let browser;
     try {
-        browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        const isLambda = process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.VERCEL;
+
+        if (isLambda) {
+            const chromium = await import('@sparticuz/chromium').then(m => m.default || m) as any;
+            const puppeteer = await import('puppeteer-core').then(m => m.default || m) as any;
+
+            browser = await puppeteer.launch({
+                args: chromium.args,
+                defaultViewport: chromium.defaultViewport,
+                executablePath: await chromium.executablePath(),
+                headless: chromium.headless,
+                ignoreHTTPSErrors: true,
+            });
+        } else {
+            const puppeteer = await import('puppeteer').then(m => m.default || m) as any;
+            browser = await puppeteer.launch({
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+        }
 
         const page = await browser.newPage();
 

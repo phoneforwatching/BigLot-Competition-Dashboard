@@ -2,17 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import puppeteer from 'puppeteer';
 
-interface EconomicEvent {
-    id: string;
-    time: string;
-    currency: string;
-    event: string;
-    impact: 'high' | 'medium' | 'low';
-    actual?: string;
-    forecast?: string;
-    previous?: string;
-    date: string;
-}
+import type { EconomicEvent } from '$lib/data/calendarData';
 
 // Simple in-memory cache
 let cache: {
@@ -56,7 +46,7 @@ async function scrapeForexFactory(): Promise<EconomicEvent[]> {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: 'new',
+            headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 

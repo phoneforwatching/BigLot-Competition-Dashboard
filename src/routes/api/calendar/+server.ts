@@ -43,20 +43,32 @@ export const GET: RequestHandler = async () => {
 async function scrapeForexFactory(): Promise<EconomicEvent[]> {
     let browser;
     try {
-        const isLambda = process.env.AWS_LAMBDA_FUNCTION_VERSION || process.env.VERCEL;
-
-        if (isLambda) {
+        // Detect environment and launch appropriate browser
+        // Prioritize @sparticuz/chromium for Vercel/Lambda
+        try {
             const chromium = await import('@sparticuz/chromium').then(m => m.default || m) as any;
-            const puppeteer = await import('puppeteer-core').then(m => m.default || m) as any;
+            const puppeteerCore = await import('puppeteer-core').then(m => m.default || m) as any;
 
-            browser = await puppeteer.launch({
-                args: chromium.args,
-                defaultViewport: chromium.defaultViewport,
-                executablePath: await chromium.executablePath(),
-                headless: chromium.headless,
-                ignoreHTTPSErrors: true,
-            });
-        } else {
+            // Only use sparticuz if we can get a valid executable path
+            const executablePath = await chromium.executablePath();
+
+            if (executablePath) {
+                console.log('Using @sparticuz/chromium at:', executablePath);
+                browser = await puppeteerCore.launch({
+                    args: chromium.args,
+                    defaultViewport: chromium.defaultViewport,
+                    executablePath: executablePath,
+                    headless: chromium.headless,
+                    ignoreHTTPSErrors: true,
+                });
+            }
+        } catch (e) {
+            console.log('Failed to launch @sparticuz/chromium:', e);
+        }
+
+        // Fallback to local puppeteer if sparticuz failed or wasn't used
+        if (!browser) {
+            console.log('Falling back to local puppeteer');
             const puppeteer = await import('puppeteer').then(m => m.default || m) as any;
             browser = await puppeteer.launch({
                 headless: true,

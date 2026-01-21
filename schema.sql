@@ -71,13 +71,14 @@ create table public.trades (
 -- 4. Market Data Table (For Charts)
 create table public.market_data (
   symbol text not null,
+  timeframe text not null, -- 'M1', 'M5', 'H1', etc.
   time timestamp with time zone not null,
   open numeric not null,
   high numeric not null,
   low numeric not null,
   close numeric not null,
   volume bigint,
-  primary key (symbol, time)
+  primary key (symbol, timeframe, time)
 );
 
 -- Row Level Security (RLS)

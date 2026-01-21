@@ -19,49 +19,30 @@ export const GET: RequestHandler = async ({ url }) => {
             return json(mockData);
         }
 
-        // Determine table based on timeframe
-        const tableName = timeframe === 'M1' ? 'market_data_m1' : 'market_data';
-
         // Clean symbol (remove .s suffix if present)
         const cleanSymbol = symbol.replace('.s', '');
 
         const { data, error } = await supabase
-            .from(tableName)
+            .from('market_data')
             .select('time, open, high, low, close, volume')
             .eq('symbol', cleanSymbol)
+            .eq('timeframe', timeframe)
             .gte('time', from)
             .lte('time', to)
             .order('time', { ascending: true })
             .limit(5000);
 
-
         if (error) {
-            console.warn(`Supabase error fetching from ${tableName} (Code: ${error.code}). Trying fallback table...`);
+            console.error(`Supabase error fetching from market_data: ${error.message} (${error.code})`);
 
-            // If M1 failed, try the standard table
-            if (tableName === 'market_data_m1') {
-                const { data: fallbackData, error: fallbackError } = await supabase
-                    .from('market_data')
-                    .select('time, open, high, low, close, volume')
-                    .eq('symbol', cleanSymbol)
-                    .gte('time', from)
-                    .lte('time', to)
-                    .order('time', { ascending: true })
-                    .limit(5000);
-
-                if (!fallbackError && fallbackData && fallbackData.length > 0) {
-                    return json(fallbackData);
-                }
-            }
-
-            // Still nothing? Use mock data
-            console.log('No data found in any table, generating mock data...');
+            // Fallback to mock data on error
             const mockData = generateMockCandles(cleanSymbol, from, to, timeframe);
             return json(mockData);
         }
 
         if (!data || data.length === 0) {
             // Generate mock data if no real data available
+            // This ensures the chart always works even without enough history
             const mockData = generateMockCandles(cleanSymbol, from, to, timeframe);
             return json(mockData);
         }

@@ -67,32 +67,32 @@
     </T.Group>
 </Float>
 
-<!-- Dynamic Starfield/Data Particles -->
-{#each Array(80) as _, i}
-    <Float
-        speed={0.2 + Math.random()}
-        floatIntensity={2}
-        position={[
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 20,
-        ]}
-    >
-        <T.Mesh>
-            <T.SphereGeometry args={[0.03 + Math.random() * 0.04, 8, 8]} />
+<!-- Dynamic Starfield/Data Particles - Optimized -->
+<T.Group rotation.y={rotation * 0.1}>
+    {#each Array(40) as _, i}
+        <T.Mesh
+            position={[
+                (Math.random() - 0.5) * 30,
+                (Math.random() - 0.5) * 30,
+                (Math.random() - 0.5) * 20,
+            ]}
+        >
+            <T.SphereGeometry args={[0.03 + Math.random() * 0.04, 4, 4]} />
             <T.MeshStandardMaterial
                 color={Math.random() > 0.5 ? goldColor : "#ffffff"}
                 emissive={goldColor}
                 emissiveIntensity={4}
             />
         </T.Mesh>
-    </Float>
-{/each}
+    {/each}
+</T.Group>
 
 <ContactShadows
     blur={3}
     far={15}
     opacity={0.4}
     scale={25}
+    resolution={256}
+    frames={1}
     position={[0, -8, 0]}
 />

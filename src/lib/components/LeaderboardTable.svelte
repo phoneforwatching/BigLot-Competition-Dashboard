@@ -21,10 +21,13 @@
   }
 
   function getRankStyle(rank: number): string {
-    if (rank === 1) return "from-gold-500/10 to-transparent";
-    if (rank === 2) return "from-slate-400/5 to-transparent";
-    if (rank === 3) return "from-amber-700/5 to-transparent";
-    return "";
+    if (rank === 1)
+      return "bg-gradient-to-r from-gold-500/15 via-gold-500/5 to-transparent border-l-4 border-l-gold-500 shadow-[inset_0_0_20px_rgba(243,156,18,0.05)]";
+    if (rank === 2)
+      return "bg-gradient-to-r from-slate-400/10 via-slate-400/2 to-transparent border-l-4 border-l-slate-400 shadow-[inset_0_0_20px_rgba(148,163,184,0.03)]";
+    if (rank === 3)
+      return "bg-gradient-to-r from-amber-700/10 via-amber-700/2 to-transparent border-l-4 border-l-amber-700 shadow-[inset_0_0_20px_rgba(180,83,9,0.03)]";
+    return "border-l-4 border-l-transparent";
   }
 </script>
 
@@ -49,22 +52,31 @@
           <tr
             class="group transition-all duration-500 cursor-pointer relative
               {entry.isDisqualified
-              ? 'bg-red-900/10 hover:bg-red-900/20'
+              ? 'bg-red-900/10 hover:bg-red-900/20 border-l-4 border-l-red-500'
               : 'hover:bg-white/5 ' + getRankStyle(rank)}"
             on:click={() => goto(`/leaderboard/${entry.id}`)}
           >
             <td class="px-10 py-8 relative">
               <div class="flex items-center gap-4">
                 <span
-                  class="text-xl font-mono font-black {rank <= 3
-                    ? 'text-gold-500'
-                    : 'text-gray-500'}"
+                  class="text-xl font-mono font-black {rank === 1
+                    ? 'text-gold-400'
+                    : rank === 2
+                      ? 'text-slate-300'
+                      : rank === 3
+                        ? 'text-amber-500'
+                        : 'text-gray-500'}"
                 >
                   {rank.toString().padStart(2, "0")}
                 </span>
                 {#if rank <= 3}
                   <div
-                    class="w-1.5 h-6 bg-gold-500 rounded-full shadow-[0_0_15px_rgba(243,156,18,0.5)]"
+                    class="w-1.5 h-6 rounded-full animate-pulse
+                    {rank === 1
+                      ? 'bg-gold-500 shadow-[0_0_15px_rgba(243,156,18,0.6)]'
+                      : rank === 2
+                        ? 'bg-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.4)]'
+                        : 'bg-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.4)]'}"
                   ></div>
                 {/if}
               </div>
@@ -72,10 +84,17 @@
             <td class="px-6 py-8">
               <div class="flex items-center gap-6">
                 <div
-                  class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500 shadow-2xl relative"
+                  class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500 shadow-2xl relative overflow-hidden"
                 >
-                  <div class="absolute inset-0 rounded-2xl bg-black/40"></div>
-                  <span class="relative z-10">
+                  <div class="absolute inset-0 bg-black/40"></div>
+                  {#if rank === 1}
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-gold-500/20 to-transparent"
+                    ></div>
+                  {/if}
+                  <span
+                    class="relative z-10 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
+                  >
                     {#if rank === 1}👑{:else if rank === 2}🥈{:else if rank === 3}🥉{:else}👤{/if}
                   </span>
                 </div>
@@ -90,12 +109,19 @@
                         >Disqualified</span
                       >
                     {/if}
+                    {#if rank === 1}
+                      <span
+                        class="text-[9px] bg-gold-500 text-black px-2 py-0.5 rounded font-black tracking-tighter uppercase"
+                        >Defending Champ</span
+                      >
+                    {/if}
                   </div>
                   <div
                     class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1"
                   >
-                    {#if rank === 1}The Grand Champion{:else if rank <= 10}Elite
-                      Grandmaster{:else}Battle Challenger{/if}
+                    {#if rank === 1}The Grand Champion{:else if rank <= 3}Elite
+                      Grandmaster{:else if rank <= 10}Battle Vanguard{:else}Battle
+                      Challenger{/if}
                   </div>
                 </div>
               </div>
@@ -103,7 +129,7 @@
             <td class="px-6 py-8 text-right">
               <div class="flex flex-col items-end">
                 <span
-                  class="text-2xl font-black text-white tabular-nums tracking-tighter"
+                  class="text-2xl font-black text-white tabular-nums tracking-tighter transition-all group-hover:scale-110 group-hover:text-gold-400"
                 >
                   {entry.points.toLocaleString()}
                 </span>
@@ -133,7 +159,7 @@
                 class="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0"
               >
                 <div
-                  class="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-black"
+                  class="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-black shadow-[0_0_20px_rgba(243,156,18,0.4)]"
                 >
                   <svg
                     class="w-6 h-6"
@@ -165,7 +191,13 @@
         class="w-full group relative flex items-center justify-between p-6 rounded-[2rem] border transition-all active:scale-95 duration-500 overflow-hidden
           {entry.isDisqualified
           ? 'bg-red-900/10 border-red-500/20'
-          : 'bg-white/5 border-white/10 hover:border-gold-500/50'}"
+          : rank === 1
+            ? 'bg-gold-500/10 border-gold-500/30'
+            : rank === 2
+              ? 'bg-slate-400/10 border-slate-400/30'
+              : rank === 3
+                ? 'bg-amber-700/10 border-amber-600/30'
+                : 'bg-white/5 border-white/10 hover:border-gold-500/50'}"
         on:click={() => goto(`/leaderboard/${entry.id}`)}
       >
         <div
@@ -174,17 +206,24 @@
 
         <div class="flex items-center gap-5 relative z-10">
           <div
-            class="text-2xl font-black {rank <= 3
+            class="text-2xl font-black {rank === 1
               ? 'text-gold-500'
-              : 'text-gray-600'} w-8 italic"
+              : rank === 2
+                ? 'text-slate-300'
+                : rank === 3
+                  ? 'text-amber-500'
+                  : 'text-gray-600'} w-8 italic"
           >
             #{rank}
           </div>
-          <div>
+          <div class="text-left">
             <div
               class="font-black text-white text-lg uppercase tracking-tighter flex flex-col"
             >
-              {entry.nickname}
+              <span class="flex items-center gap-2">
+                {entry.nickname}
+                {#if rank === 1}👑{/if}
+              </span>
               {#if entry.isDisqualified}
                 <span
                   class="text-[8px] text-red-500 font-bold uppercase tracking-widest mt-1"

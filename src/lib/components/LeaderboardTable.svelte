@@ -5,7 +5,13 @@
   export let data: LeaderboardEntry[] = [];
 
   $: sortedData = [...data].sort((a, b) => {
+    // 1. Sort by Disqualified status (Active first)
+    if (a.isDisqualified !== b.isDisqualified) return a.isDisqualified ? 1 : -1;
+
+    // 2. Sort by Points
     if (b.points !== a.points) return b.points - a.points;
+
+    // 3. Sort by Profit
     return b.profit - a.profit;
   });
 
@@ -41,9 +47,11 @@
         {#each sortedData as entry, index}
           {@const rank = index + 1}
           <tr
-            class="group hover:bg-gradient-to-r {getRankStyle(
-              rank,
-            )} hover:bg-gold-500/5 transition-all duration-300 cursor-pointer"
+            class="group transition-all duration-300 cursor-pointer border-b border-dark-border/30
+              {entry.isDisqualified
+              ? 'bg-red-50/50 dark:bg-red-900/10 hover:bg-red-100/50 dark:hover:bg-red-900/20 w-full'
+              : 'hover:bg-gradient-to-r hover:bg-gold-500/5 ' +
+                getRankStyle(rank)}"
             on:click={() => goto(`/leaderboard/${entry.id}`)}
           >
             <td class="px-8 py-6">
@@ -74,6 +82,12 @@
                     class="font-black text-gray-900 dark:text-white uppercase tracking-tight group-hover:text-gold-400 transition-colors"
                   >
                     {entry.nickname}
+                    {#if entry.isDisqualified}
+                      <span
+                        class="ml-2 text-[10px] text-red-500 font-bold uppercase tracking-wider border border-red-500/30 px-1 py-0.5 rounded"
+                        >Disqualified</span
+                      >
+                    {/if}
                   </div>
                   <div
                     class="text-[10px] text-gray-500 font-bold uppercase tracking-widest"
@@ -134,7 +148,10 @@
     {#each sortedData as entry, index}
       {@const rank = index + 1}
       <button
-        class="w-full flex items-center justify-between p-5 rounded-2xl bg-dark-surface/50 border border-dark-border active:scale-95 transition-all text-left"
+        class="w-full flex items-center justify-between p-5 rounded-2xl border active:scale-95 transition-all text-left
+          {entry.isDisqualified
+          ? 'bg-red-50/50 dark:bg-red-900/10 border-red-500/30'
+          : 'bg-dark-surface/50 border-dark-border'}"
         on:click={() => goto(`/leaderboard/${entry.id}`)}
       >
         <div class="flex items-center gap-4">
@@ -148,6 +165,12 @@
           <div>
             <div class="font-black text-white uppercase tracking-tighter">
               {entry.nickname}
+              {#if entry.isDisqualified}
+                <span
+                  class="ml-2 text-[10px] text-red-500 font-bold uppercase tracking-wider"
+                  >Disqualified</span
+                >
+              {/if}
             </div>
             <div class="text-[10px] text-gray-500 uppercase tracking-widest">
               {entry.points.toLocaleString()} pts

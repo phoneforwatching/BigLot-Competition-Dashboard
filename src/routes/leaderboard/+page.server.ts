@@ -36,16 +36,25 @@ export const load: PageServerLoad = async () => {
                 }
             });
 
-            const sortedData = Array.from(latestEntries.values()).sort((a, b) => b.points - a.points);
+            const sortedData = Array.from(latestEntries.values()).sort((a: any, b: any) => {
+                const aDisqualified = (a.max_drawdown || 0) > 30;
+                const bDisqualified = (b.max_drawdown || 0) > 30;
+
+                if (aDisqualified !== bDisqualified) {
+                    return aDisqualified ? 1 : -1; // Disqualified goes to bottom
+                }
+                return b.points - a.points;
+            });
 
             return {
-                leaderboard: sortedData.map(entry => ({
+                leaderboard: sortedData.map((entry: any) => ({
                     id: entry.participant_id,
                     nickname: entry.participants?.nickname || 'Unknown',
                     points: entry.points,
                     profit: entry.profit,
                     balance: entry.balance,
                     equity: entry.equity,
+                    isDisqualified: (entry.max_drawdown || 0) > 30,
                     stats: {
                         winRate: entry.win_rate,
                         profitFactor: entry.profit_factor,
@@ -64,7 +73,23 @@ export const load: PageServerLoad = async () => {
     }
 
     // Fallback to mock data until DB is ready or if fetch fails
+    const processedMockData = leaderboardData.map(entry => ({
+        ...entry,
+        isDisqualified: (entry.stats.maxDrawdown || 0) > 30
+    })).sort((a, b) => {
+        const aDisqualified = a.isDisqualified;
+        const bDisqualified = b.isDisqualified;
+
+        if (aDisqualified !== bDisqualified) {
+            return aDisqualified ? 1 : -1; // Disqualified goes to bottom
+        }
+
+        // Normal sort
+        if (b.points !== a.points) return b.points - a.points;
+        return b.profit - a.profit;
+    });
+
     return {
-        leaderboard: leaderboardData
+        leaderboard: processedMockData
     };
 };

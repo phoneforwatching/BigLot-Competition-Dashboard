@@ -3,8 +3,9 @@
 
     export let traders: LeaderboardEntry[] = [];
 
-    // Correct sorting by points
+    // Correct sorting by points and filter out disqualified
     $: top3 = [...traders]
+        .filter((t) => !t.isDisqualified)
         .sort((a, b) => (b.points || 0) - (a.points || 0))
         .slice(0, 3);
 

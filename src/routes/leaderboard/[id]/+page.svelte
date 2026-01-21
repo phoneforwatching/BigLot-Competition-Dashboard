@@ -865,7 +865,9 @@
             {:else}
                 <!-- Premium Header -->
                 <div
-                    class="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl border border-gray-100 dark:border-dark-border p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 animate-fade-in-up relative overflow-hidden group"
+                    class="{trader.isDisqualified
+                        ? 'bg-red-50 dark:bg-red-900/10 border-red-500/30'
+                        : 'bg-white dark:bg-dark-surface border-gray-100 dark:border-dark-border'} rounded-2xl shadow-2xl border p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 animate-fade-in-up relative overflow-hidden group"
                 >
                     <!-- Background Accent -->
                     <div
@@ -887,11 +889,18 @@
                                 >
                                     {trader.nickname}
                                 </h1>
-                                {#if rank <= 3}
+                                {#if rank <= 3 && !trader.isDisqualified}
                                     <span
                                         class="px-2 sm:px-3 py-0.5 sm:py-1 bg-gold-500 text-black text-[9px] sm:text-[10px] font-black rounded-full uppercase tracking-tighter whitespace-nowrap"
                                         >Elite Member</span
                                     >
+                                {/if}
+                                {#if trader.isDisqualified}
+                                    <span
+                                        class="px-3 py-1 bg-red-600 text-white text-[10px] sm:text-xs font-black rounded-full uppercase tracking-tighter whitespace-nowrap shadow-lg shadow-red-500/30 animate-pulse"
+                                    >
+                                        ⛔ Disqualified
+                                    </span>
                                 {/if}
                                 <button
                                     on:click={() => (showAiModal = true)}

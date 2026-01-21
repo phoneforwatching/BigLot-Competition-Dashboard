@@ -39,6 +39,7 @@ export type LeaderboardEntry = {
   nickname: string;
   points: number;
   profit: number;
+  isDisqualified?: boolean;
   stats: TraderStats;
   equityCurve: number[]; // Array of balance points for chart
   history: TradeHistory[];

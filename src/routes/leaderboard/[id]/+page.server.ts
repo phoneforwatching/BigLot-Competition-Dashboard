@@ -121,6 +121,7 @@ export const load: PageServerLoad = async ({ params }) => {
                     nickname: participant.nickname,
                     points: stats?.points || 0, // Points logic to be implemented
                     profit: stats?.profit || 0,
+                    isDisqualified: (stats?.max_drawdown || 0) > 30,
                     stats: {
                         winRate: stats?.win_rate || 0,
                         profitFactor: stats?.profit_factor || 0,
@@ -203,7 +204,10 @@ export const load: PageServerLoad = async ({ params }) => {
         throw error(404, 'Trader not found');
     }
 
-    const trader = leaderboardData[traderIndex];
+    const trader = {
+        ...leaderboardData[traderIndex],
+        isDisqualified: (leaderboardData[traderIndex].stats.maxDrawdown || 0) > 30
+    };
     const rank = traderIndex + 1;
 
     return {

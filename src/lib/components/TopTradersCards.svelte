@@ -61,7 +61,7 @@
 </script>
 
 <div
-    class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 items-end perspective-2000"
+    class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-24 items-end perspective-2000"
 >
     {#each podiumTraders as trader, i}
         {#if trader}
@@ -70,10 +70,10 @@
             <a
                 href="/leaderboard/{trader.id}"
                 use:tilt={{ max: 8, perspective: 2000 }}
-                class="group relative flex flex-col items-center p-8 rounded-[2.5rem] transition-all duration-500 transform-gpu border backdrop-blur-2xl justify-center
+                class="group relative flex flex-col items-center p-6 md:p-8 rounded-[2.5rem] transition-all duration-500 transform-gpu border backdrop-blur-2xl justify-center
                 {style.container}
                 {rank === 1
-                    ? 'order-1 md:order-2 scale-110 md:scale-105 z-20'
+                    ? 'order-1 md:order-2 scale-100 md:scale-105 z-20'
                     : rank === 2
                       ? 'order-2 md:order-1 z-10'
                       : 'order-3 md:order-3 z-10'}"
@@ -94,7 +94,7 @@
 
                 <!-- Rank Badge -->
                 <div
-                    class="absolute -top-6 left-1/2 -translate-x-1/2 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black z-30 transform -rotate-12 group-hover:rotate-0 group-hover:-translate-y-2 transition-all duration-500
+                    class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center text-xl md:text-2xl font-black z-30 transform -rotate-12 group-hover:rotate-0 group-hover:-translate-y-2 transition-all duration-500
                     {style.badge}"
                 >
                     {rank}
@@ -111,7 +111,7 @@
                     ></div>
 
                     <div
-                        class="relative w-32 h-32 rounded-full bg-dark-bg border-[4px] {style.avatarBorder} flex items-center justify-center text-5xl overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-2xl"
+                        class="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-dark-bg border-[4px] {style.avatarBorder} flex items-center justify-center text-4xl md:text-5xl overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-2xl"
                     >
                         {#if rank === 1}
                             <span
@@ -147,7 +147,7 @@
                 <div class="text-center w-full z-10">
                     <div class="flex items-center justify-center gap-2 mb-1">
                         <h3
-                            class="text-2xl md:text-3xl font-black text-white group-hover:text-gold-400 transition-colors truncate px-2 tracking-tighter uppercase"
+                            class="text-xl md:text-3xl font-black text-white group-hover:text-gold-400 transition-colors truncate px-2 tracking-tighter uppercase"
                         >
                             {trader.nickname}
                         </h3>

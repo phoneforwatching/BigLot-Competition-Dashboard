@@ -2,7 +2,31 @@
     import "../app.css";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
     import AIAgent from "$lib/components/AIAgent.svelte";
+    import SplashScreen from "$lib/components/SplashScreen.svelte";
     import { page } from "$app/stores";
+    import { browser } from "$app/environment";
+    import { onMount } from "svelte";
+
+    let splashComplete = false;
+    // Default to true ensures it renders on server/first paint
+    let showSplash = true;
+
+    // Synchronously check on client initialization to avoid flash if already seen
+    if (browser && sessionStorage.getItem("splashShown")) {
+        showSplash = false;
+        splashComplete = true;
+    }
+
+    onMount(() => {
+        // Any other mounting logic if needed
+    });
+
+    function handleSplashComplete() {
+        splashComplete = true;
+        if (browser) {
+            sessionStorage.setItem("splashShown", "true");
+        }
+    }
 </script>
 
 <div
@@ -96,4 +120,8 @@
     </footer>
 
     <AIAgent />
+
+    {#if showSplash && !splashComplete}
+        <SplashScreen on:complete={handleSplashComplete} />
+    {/if}
 </div>

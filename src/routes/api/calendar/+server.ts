@@ -12,9 +12,9 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const GET: RequestHandler = async () => {
     // Return cached data if valid
-    if (cache && Date.now() - cache.timestamp < CACHE_DURATION) {
-        return json({ events: cache.data });
-    }
+    // if (cache && Date.now() - cache.timestamp < CACHE_DURATION) {
+    //     return json({ events: cache.data });
+    // }
 
     try {
         const events = await scrapeForexFactory();
@@ -81,6 +81,7 @@ async function scrapeForexFactory(): Promise<EconomicEvent[]> {
         // Set a realistic viewport and User-Agent
         await page.setViewport({ width: 1280, height: 800 });
         await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        await page.emulateTimezone('Asia/Bangkok');
 
         // Go to Forex Factory Calendar
         // We use 'today' to focus on the immediate relevant data, or just /calendar for the week

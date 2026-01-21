@@ -1,0 +1,24 @@
+* Host localhost:5173 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:5173...
+* Connected to localhost (::1) port 5173
+> GET /api/calendar HTTP/1.1
+> Host: localhost:5173
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Vary: Origin
+< content-length: 9666
+< content-type: application/json
+< Date: Wed, 21 Jan 2026 13:45:07 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< 
+{ [9666 bytes data]
+100  9666  100  9666    0     0  1866k      0 --:--:-- --:--:-- --:--:-- 2359k
+* Connection #0 to host localhost left intact

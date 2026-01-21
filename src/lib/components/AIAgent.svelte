@@ -1,6 +1,7 @@
 <script lang="ts">
     import { fade, fly, slide } from "svelte/transition";
     import { onMount } from "svelte";
+    import { marked } from "marked";
 
     let isOpen = false;
     let messageInput = "";
@@ -186,7 +187,9 @@
                                 ? 'bg-gold-500 text-white rounded-br-none'
                                 : 'bg-white dark:bg-dark-bg text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-dark-border rounded-bl-none'}"
                         >
-                            {msg.text}
+                            <div class="markdown-content">
+                                {@html marked(msg.text)}
+                            </div>
                             <div class="text-[10px] opacity-70 mt-1 text-right">
                                 {msg.timestamp.toLocaleTimeString([], {
                                     hour: "2-digit",
@@ -306,3 +309,46 @@
         {/if}
     </button>
 </div>
+
+<style>
+    :global(.markdown-content ul) {
+        list-style-type: disc;
+        padding-left: 1.5em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    :global(.markdown-content ol) {
+        list-style-type: decimal;
+        padding-left: 1.5em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    :global(.markdown-content strong) {
+        font-weight: 700;
+        color: inherit;
+    }
+    :global(.markdown-content p) {
+        margin-bottom: 0.5em;
+    }
+    :global(.markdown-content p:last-child) {
+        margin-bottom: 0;
+    }
+    :global(.markdown-content h1),
+    :global(.markdown-content h2),
+    :global(.markdown-content h3) {
+        font-weight: 700;
+        margin-top: 0.75em;
+        margin-bottom: 0.5em;
+        font-size: 1.1em;
+    }
+    :global(.markdown-content code) {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 0.1em 0.3em;
+        border-radius: 0.2em;
+        font-family: monospace;
+        font-size: 0.9em;
+    }
+    :global(.dark .markdown-content code) {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+</style>

@@ -1,6 +1,7 @@
 <script>
     import "../app.css";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+    import { page } from "$app/stores";
 </script>
 
 <div
@@ -17,23 +18,49 @@
         <div
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
         >
-            <a href="/" class="text-xl font-bold flex items-center gap-2 group">
-                <div class="relative">
-                    <img
-                        src="/logo-masterpiece.png"
-                        alt="BigLot Logo"
-                        class="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <!-- Subtle glow effect behind logo -->
-                    <div
-                        class="absolute inset-0 bg-gold-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    ></div>
-                </div>
-                <span
-                    class="ml-2 bg-gradient-to-r from-gold-600 to-gold-400 bg-clip-text text-transparent drop-shadow-sm"
-                    >BigLot</span
+            <div class="flex items-center gap-8">
+                <a
+                    href="/"
+                    class="text-xl font-bold flex items-center gap-2 group"
                 >
-            </a>
+                    <div class="relative">
+                        <img
+                            src="/logo-masterpiece.png"
+                            alt="BigLot Logo"
+                            class="h-10 w-auto transition-transform duration-300 group-hover:scale-110"
+                        />
+                        <!-- Subtle glow effect behind logo -->
+                        <div
+                            class="absolute inset-0 bg-gold-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        ></div>
+                    </div>
+                    <span
+                        class="ml-2 bg-gradient-to-r from-gold-600 to-gold-400 bg-clip-text text-transparent drop-shadow-sm"
+                        >BigLot</span
+                    >
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a
+                        href="/"
+                        class="text-sm font-medium transition-colors {$page.url
+                            .pathname === '/'
+                            ? 'text-gold-600 dark:text-gold-400'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gold-500 dark:hover:text-gold-400'}"
+                        >Dashboard</a
+                    >
+                    <a
+                        href="/calendar"
+                        class="text-sm font-medium transition-colors {$page.url
+                            .pathname === '/calendar'
+                            ? 'text-gold-600 dark:text-gold-400'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gold-500 dark:hover:text-gold-400'}"
+                        >Calendar</a
+                    >
+                </nav>
+            </div>
+
             <div class="flex items-center gap-4">
                 <ThemeToggle />
             </div>

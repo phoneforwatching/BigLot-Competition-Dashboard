@@ -51,6 +51,8 @@ export type LeaderboardEntry = {
     equity: number;
     floatingPL: number;
   }>;
+  rankProfit?: number; // Rank based on Profit
+  rankPoints?: number; // Rank based on Points (Pips)
 };
 
 // Helper to generate random history

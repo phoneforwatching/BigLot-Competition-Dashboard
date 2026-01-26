@@ -20,7 +20,9 @@
     return `${sign}$${Math.abs(profit).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   }
 
-  function getRankStyle(rank: number): string {
+  function getRankStyle(rank: number, isProfitRank: boolean = false): string {
+    // We could differentiate styles for Profit Rank vs Points Rank if needed
+    // For now, if they are top rank in either, give them gold
     if (rank === 1)
       return "bg-gradient-to-r from-gold-500/15 via-gold-500/5 to-transparent border-l-4 border-l-gold-500 shadow-[inset_0_0_20px_rgba(243,156,18,0.05)]";
     if (rank === 2)
@@ -41,7 +43,7 @@
         >
           <th class="px-10 py-8">POS</th>
           <th class="px-6 py-8">Trader Profile</th>
-          <th class="px-6 py-8 text-right">Battle Score</th>
+          <th class="px-6 py-8 text-right">Points</th>
           <th class="px-6 py-8 text-right">Total Gain</th>
           <th class="px-10 py-8"></th>
         </tr>
@@ -49,32 +51,34 @@
       <tbody class="divide-y divide-white/5">
         {#each sortedData as entry, index}
           {@const rank = index + 1}
+          {@const isDoubleWinner =
+            entry.rankPoints === 1 && entry.rankProfit === 1}
           <tr
             class="group transition-all duration-500 cursor-pointer relative
               {entry.isDisqualified
               ? 'bg-red-900/10 hover:bg-red-900/20 border-l-4 border-l-red-500'
-              : 'hover:bg-white/5 ' + getRankStyle(rank)}"
+              : 'hover:bg-white/5 ' + getRankStyle(entry.rankPoints || 999)}"
             on:click={() => goto(`/leaderboard/${entry.id}`)}
           >
             <td class="px-10 py-8 relative">
               <div class="flex items-center gap-4">
                 <span
-                  class="text-xl font-mono font-black {rank === 1
+                  class="text-xl font-mono font-black {entry.rankPoints === 1
                     ? 'text-gold-400'
-                    : rank === 2
+                    : entry.rankPoints === 2
                       ? 'text-slate-300'
-                      : rank === 3
+                      : entry.rankPoints === 3
                         ? 'text-amber-500'
                         : 'text-gray-500'}"
                 >
-                  {rank.toString().padStart(2, "0")}
+                  {entry.rankPoints ? `#${entry.rankPoints}` : "-"}
                 </span>
-                {#if rank <= 3}
+                {#if entry.rankPoints && entry.rankPoints <= 3}
                   <div
                     class="w-1.5 h-6 rounded-full animate-pulse
-                    {rank === 1
+                    {entry.rankPoints === 1
                       ? 'bg-gold-500 shadow-[0_0_15px_rgba(243,156,18,0.6)]'
-                      : rank === 2
+                      : entry.rankPoints === 2
                         ? 'bg-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.4)]'
                         : 'bg-amber-700 shadow-[0_0_15px_rgba(180,83,9,0.4)]'}"
                   ></div>
@@ -87,7 +91,11 @@
                   class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-500 shadow-2xl relative overflow-hidden"
                 >
                   <div class="absolute inset-0 bg-black/40"></div>
-                  {#if rank === 1}
+                  {#if isDoubleWinner}
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-gold-500/40 to-transparent animate-pulse"
+                    ></div>
+                  {:else if entry.rankPoints === 1 || entry.rankProfit === 1}
                     <div
                       class="absolute inset-0 bg-gradient-to-t from-gold-500/20 to-transparent"
                     ></div>
@@ -95,7 +103,11 @@
                   <span
                     class="relative z-10 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
                   >
-                    {#if rank === 1}👑{:else if rank === 2}🥈{:else if rank === 3}🥉{:else}👤{/if}
+                    {#if isDoubleWinner}👑
+                    {:else if entry.rankPoints === 1}🎯
+                    {:else if entry.rankProfit === 1}💰
+                    {:else if (entry.rankPoints || 99) <= 3}🏆
+                    {:else}👤{/if}
                   </span>
                 </div>
                 <div>
@@ -109,11 +121,24 @@
                         >Disqualified</span
                       >
                     {/if}
-                    {#if rank === 1}
+                    {#if isDoubleWinner}
                       <span
-                        class="text-[9px] bg-gold-500 text-black px-2 py-0.5 rounded font-black tracking-tighter uppercase"
-                        >Defending Champ</span
+                        class="text-[9px] bg-gold-500 text-black px-2 py-0.5 rounded font-black tracking-tighter uppercase animate-pulse"
+                        >Double Winner</span
                       >
+                    {:else}
+                      {#if entry.rankPoints === 1}
+                        <span
+                          class="text-[9px] bg-slate-700 text-gold-400 border border-gold-400/50 px-2 py-0.5 rounded font-black tracking-tighter uppercase"
+                          >Points Leader</span
+                        >
+                      {/if}
+                      {#if entry.rankProfit === 1}
+                        <span
+                          class="text-[9px] bg-green-900/40 text-green-400 border border-green-500/50 px-2 py-0.5 rounded font-black tracking-tighter uppercase"
+                          >Profit Leader</span
+                        >
+                      {/if}
                     {/if}
                   </div>
                   <div
@@ -135,7 +160,7 @@
                 </span>
                 <span
                   class="text-[9px] font-black text-gold-500/50 uppercase tracking-widest mt-1"
-                  >Consistency Pts</span
+                  >Points</span
                 >
               </div>
             </td>
@@ -187,6 +212,7 @@
   <div class="md:hidden space-y-4 p-4">
     {#each sortedData as entry, index}
       {@const rank = index + 1}
+      {@const isDoubleWinner = entry.rankPoints === 1 && entry.rankProfit === 1}
       <button
         class="w-full group relative flex items-center justify-between p-6 rounded-[2rem] border transition-all active:scale-95 duration-500 overflow-hidden
           {entry.isDisqualified
@@ -214,7 +240,7 @@
                   ? 'text-amber-500'
                   : 'text-gray-600'} w-8 italic"
           >
-            #{rank}
+            #{entry.rankPoints || "-"}
           </div>
           <div class="text-left">
             <div
@@ -222,7 +248,9 @@
             >
               <span class="flex items-center gap-2">
                 {entry.nickname}
-                {#if rank === 1}👑{/if}
+                {#if isDoubleWinner}👑
+                {:else if entry.rankPoints === 1}🎯
+                {:else if entry.rankProfit === 1}💰{/if}
               </span>
               {#if entry.isDisqualified}
                 <span

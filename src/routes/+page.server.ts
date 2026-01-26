@@ -34,37 +34,9 @@ export const load: PageServerLoad = async () => {
                 }
             });
 
-            const sortedData = Array.from(latestEntries.values()).sort((a: any, b: any) => {
-                const aDisqualified = (a.max_drawdown || 0) > 30;
-                const bDisqualified = (b.max_drawdown || 0) > 30;
-
-                if (aDisqualified !== bDisqualified) {
-                    return aDisqualified ? 1 : -1; // Disqualified goes to bottom
-                }
-                return b.points - a.points;
-            });
-
+            const uniqueData = Array.from(latestEntries.values());
             return {
-                leaderboard: sortedData.map((entry: any) => ({
-                    id: entry.participant_id,
-                    nickname: entry.participants?.nickname || 'Unknown',
-                    points: entry.points,
-                    profit: entry.profit,
-                    balance: entry.balance,
-                    equity: entry.equity,
-                    isDisqualified: (entry.max_drawdown || 0) > 30,
-                    stats: {
-                        winRate: entry.win_rate,
-                        profitFactor: entry.profit_factor,
-                        maxDrawdown: entry.max_drawdown || 0,
-                        totalTrades: entry.total_trades,
-                        avgWin: entry.avg_win,
-                        avgLoss: entry.avg_loss,
-                        rrRatio: entry.rr_ratio
-                    },
-                    history: [], // List view doesn't need history
-                    equityCurve: [] // List view doesn't need curve
-                }))
+                leaderboard: processLeaderboardData(uniqueData, true)
             };
         }
     } catch (e) {
@@ -72,23 +44,74 @@ export const load: PageServerLoad = async () => {
     }
 
     // Fallback to mock data until DB is ready or if fetch fails
-    const processedMockData = leaderboardData.map(entry => ({
-        ...entry,
-        isDisqualified: (entry.stats.maxDrawdown || 0) > 30
-    })).sort((a, b) => {
-        const aDisqualified = a.isDisqualified;
-        const bDisqualified = b.isDisqualified;
-
-        if (aDisqualified !== bDisqualified) {
-            return aDisqualified ? 1 : -1; // Disqualified goes to bottom
-        }
-
-        // Normal sort
-        if (b.points !== a.points) return b.points - a.points;
-        return b.profit - a.profit;
-    });
-
     return {
-        leaderboard: processedMockData
+        leaderboard: processLeaderboardData(leaderboardData, false)
     };
 };
+
+/* Helper function to process leaderboard data with new rules */
+function processLeaderboardData(data: any[], fromSupabase = false) {
+    // 1. Map to base structure
+    const mapped = data.map((entry: any) => {
+        const stats = fromSupabase ? {
+            winRate: entry.win_rate,
+            profitFactor: entry.profit_factor,
+            maxDrawdown: entry.max_drawdown || 0,
+            totalTrades: entry.total_trades,
+            avgWin: entry.avg_win,
+            avgLoss: entry.avg_loss,
+            rrRatio: entry.rr_ratio
+        } : entry.stats;
+
+        // Disqualification Rule: Equity <= 0 (Port Blown)
+        // If equity is missing, fallback to balance, or default to safe value if mock
+        const equity = fromSupabase ? entry.equity : (entry.equityCurve ? entry.equityCurve[entry.equityCurve.length - 1] : 10000); // Mock fallback
+
+        // For Supabase data:
+        const isDisqualified = fromSupabase ? (entry.equity <= 0) : (entry.stats.maxDrawdown > 99 || (entry.equityCurve && entry.equityCurve[entry.equityCurve.length - 1] <= 0));
+
+        return {
+            id: fromSupabase ? entry.participant_id : entry.id,
+            nickname: fromSupabase ? (entry.participants?.nickname || 'Unknown') : entry.nickname,
+            points: entry.points,
+            profit: entry.profit,
+            // balance: entry.balance, // Optional
+            // equity: entry.equity,   // Optional
+            isDisqualified,
+            stats,
+            history: fromSupabase ? [] : entry.history,
+            equityCurve: fromSupabase ? [] : entry.equityCurve,
+        };
+    });
+
+    // 2. Separate Active and Disqualified
+    const activeInfo = mapped.filter((e: any) => !e.isDisqualified);
+    const disqualifiedInfo = mapped.filter((e: any) => e.isDisqualified);
+
+    // 3. Calculate Ranks for Active Users ONLY
+    // Rank by Profit
+    const profitSorted = [...activeInfo].sort((a, b) => b.profit - a.profit);
+    const profitRanks = new Map(profitSorted.map((e, i) => [e.id, i + 1]));
+
+    // Rank by Points (Pips)
+    const pointsSorted = [...activeInfo].sort((a, b) => b.points - a.points);
+    const pointsRanks = new Map(pointsSorted.map((e, i) => [e.id, i + 1]));
+
+    // 4. Assign Ranks back to objects
+    const finalActive = activeInfo.map((e: any) => ({
+        ...e,
+        rankProfit: profitRanks.get(e.id),
+        rankPoints: pointsRanks.get(e.id)
+    }));
+
+    // Disqualified users get no rank or special rank
+    const finalDisqualified = disqualifiedInfo.map((e: any) => ({
+        ...e,
+        rankProfit: 999,
+        rankPoints: 999
+    }));
+
+    // 5. Combine and Sort for Display (Primary Sort: Points/Pips as per request to "use points")
+    // But maybe we want a toggle? For now, default to Points High-to-Low for active, then Disqualified.
+    return [...finalActive.sort((a, b) => b.points - a.points), ...finalDisqualified];
+}

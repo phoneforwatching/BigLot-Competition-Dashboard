@@ -178,6 +178,7 @@
                     class="relative z-10 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
                   >
                     {#if isDoubleWinner}👑
+                    {:else if entry.isDisqualified}⛔
                     {:else if entry.rankPoints === 1}🎯
                     {:else if entry.rankProfit === 1}💰
                     {:else if (entry.rankPoints || 99) <= 3}🏆
@@ -190,10 +191,15 @@
                   >
                     {entry.nickname}
                     {#if entry.isDisqualified}
-                      <span
-                        class="text-[10px] text-red-500 font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full"
-                        >Disqualified</span
+                      <div
+                        class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/20 border border-red-500/30 text-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]"
                       >
+                        <span class="text-xs">⛔</span>
+                        <span
+                          class="text-[10px] font-black uppercase tracking-[0.2em]"
+                          >Disqualified</span
+                        >
+                      </div>
                     {/if}
                     {#if isDoubleWinner}
                       <span
@@ -360,15 +366,17 @@
             >
               <span class="flex items-center gap-2">
                 {entry.nickname}
-                {#if isDoubleWinner}👑
+                {#if entry.isDisqualified}⛔
+                {:else if isDoubleWinner}👑
                 {:else if entry.rankPoints === 1}🎯
                 {:else if entry.rankProfit === 1}💰{/if}
               </span>
               {#if entry.isDisqualified}
-                <span
-                  class="text-[8px] text-red-500 font-bold uppercase tracking-widest mt-1"
-                  >Disqualified</span
-                >
+                <div class="flex items-center gap-1 mt-1 text-red-500">
+                  <span class="text-[10px] font-black uppercase tracking-widest"
+                    >⛔ Disqualified</span
+                  >
+                </div>
               {/if}
             </div>
             <div

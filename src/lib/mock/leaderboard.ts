@@ -169,10 +169,21 @@ export const leaderboardData: LeaderboardEntry[] = [
     history: generateHistory(10),
     dailyHistory: generateDailyHistory(30)
   },
+  {
+    id: '6',
+    nickname: 'RuleBreaker_X',
+    points: 800,
+    profit: -500.00,
+    isDisqualified: true,
+    stats: { winRate: 15.0, profitFactor: 0.2, rrRatio: 0.1, maxDrawdown: 60.0, totalTrades: 120, avgWin: 10, avgLoss: -100 },
+    equityCurve: generateEquity(10000, 20),
+    history: generateHistory(5),
+    dailyHistory: generateDailyHistory(30)
+  },
   // ... Adding more simple entries to fill the list
   ...Array.from({ length: 10 }).map((_, i) => ({
-    id: String(i + 6),
-    nickname: `Trader_${i + 6}`,
+    id: String(i + 7),
+    nickname: `Trader_${i + 7}`,
     points: 1000 - i * 50,
     profit: Number((Math.random() * 2000 - 1000).toFixed(2)),
     stats: {

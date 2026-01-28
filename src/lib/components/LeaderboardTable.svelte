@@ -4,7 +4,21 @@
 
   export let data: LeaderboardEntry[] = [];
 
-  $: sortedData = [...data].sort((a, b) => {
+  let searchQuery = "";
+  let activeFilter: "all" | "active" | "disqualified" = "all";
+
+  $: filteredData = data.filter((entry) => {
+    const matchesSearch = entry.nickname
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      activeFilter === "all" ||
+      (activeFilter === "active" && !entry.isDisqualified) ||
+      (activeFilter === "disqualified" && entry.isDisqualified);
+    return matchesSearch && matchesFilter;
+  });
+
+  $: sortedData = [...filteredData].sort((a, b) => {
     // 1. Sort by Disqualified status (Active first)
     if (a.isDisqualified !== b.isDisqualified) return a.isDisqualified ? 1 : -1;
 
@@ -21,8 +35,6 @@
   }
 
   function getRankStyle(rank: number, isProfitRank: boolean = false): string {
-    // We could differentiate styles for Profit Rank vs Points Rank if needed
-    // For now, if they are top rank in either, give them gold
     if (rank === 1)
       return "bg-gradient-to-r from-gold-500/15 via-gold-500/5 to-transparent border-l-4 border-l-gold-500 shadow-[inset_0_0_20px_rgba(243,156,18,0.05)]";
     if (rank === 2)
@@ -33,7 +45,69 @@
   }
 </script>
 
-<div class="w-full">
+<div class="w-full space-y-6">
+  <!-- Search and Filter Bar -->
+  <div
+    class="flex flex-col md:flex-row gap-4 items-center justify-between px-4"
+  >
+    <div class="relative w-full md:w-96 group">
+      <div
+        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-gold-500 text-gray-500"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg
+        >
+      </div>
+      <input
+        type="text"
+        bind:value={searchQuery}
+        placeholder="Search trader nickname..."
+        class="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500/50 transition-all placeholder:text-gray-600 text-white backdrop-blur-xl"
+      />
+    </div>
+
+    <div
+      class="flex p-1 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl"
+    >
+      <button
+        on:click={() => (activeFilter = "all")}
+        class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all {activeFilter ===
+        'all'
+          ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
+          : 'text-gray-400 hover:text-white hover:bg-white/5'}"
+      >
+        All Traders
+      </button>
+      <button
+        on:click={() => (activeFilter = "active")}
+        class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all {activeFilter ===
+        'active'
+          ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
+          : 'text-gray-400 hover:text-white hover:bg-white/5'}"
+      >
+        Active
+      </button>
+      <button
+        on:click={() => (activeFilter = "disqualified")}
+        class="px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all {activeFilter ===
+        'disqualified'
+          ? 'bg-gold-500 text-black shadow-lg shadow-gold-500/20'
+          : 'text-gray-400 hover:text-white hover:bg-white/5'}"
+      >
+        Disqualified
+      </button>
+    </div>
+  </div>
+
   <!-- Desktop Table -->
   <div class="hidden md:block">
     <table class="w-full text-left border-collapse">
@@ -206,6 +280,44 @@
         {/each}
       </tbody>
     </table>
+    {#if sortedData.length === 0}
+      <div class="py-20 text-center space-y-4">
+        <div
+          class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/5 border border-white/10 text-gray-500 mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /><path
+              d="M8 11h6"
+            /></svg
+          >
+        </div>
+        <h3 class="text-xl font-black text-white uppercase tracking-tighter">
+          No Traders Found
+        </h3>
+        <p class="text-gray-500 max-w-xs mx-auto text-sm">
+          We couldn't find any traders matching your search or filter criteria.
+          Try adjusting your terms.
+        </p>
+        <button
+          on:click={() => {
+            searchQuery = "";
+            activeFilter = "all";
+          }}
+          class="text-gold-500 text-xs font-black uppercase tracking-widest hover:text-gold-400 transition-colors pt-4"
+        >
+          Clear All Filters
+        </button>
+      </div>
+    {/if}
   </div>
 
   <!-- Mobile List View -->
@@ -282,5 +394,17 @@
         </div>
       </button>
     {/each}
+
+    {#if sortedData.length === 0}
+      <div
+        class="py-12 text-center space-y-4 bg-white/5 rounded-[2.5rem] border border-white/10"
+      >
+        <div
+          class="text-gray-500 font-bold uppercase tracking-widest text-[10px]"
+        >
+          No Results Match Your Search
+        </div>
+      </div>
+    {/if}
   </div>
 </div>

@@ -75,14 +75,6 @@
                             : 'text-gray-600 dark:text-gray-300 hover:text-gold-500 dark:hover:text-gold-400'}"
                         >Dashboard</a
                     >
-                    <a
-                        href="/calendar"
-                        class="text-sm font-medium transition-colors {$page.url
-                            .pathname === '/calendar'
-                            ? 'text-gold-600 dark:text-gold-400'
-                            : 'text-gray-600 dark:text-gray-300 hover:text-gold-500 dark:hover:text-gold-400'}"
-                        >Calendar</a
-                    >
                 </nav>
             </div>
 

@@ -64,7 +64,8 @@ export const load: PageServerLoad = async ({ params }) => {
                 .select('timestamp, balance, equity, floating_pl')
                 .eq('participant_id', id)
                 .gte('timestamp', thirtyDaysAgo.toISOString())
-                .order('timestamp', { ascending: true });
+                .order('timestamp', { ascending: false })
+                .limit(5000);
 
             if (esError) console.error(`Equity snapshots fetch error for ID ${id}:`, esError);
 
@@ -169,7 +170,7 @@ export const load: PageServerLoad = async ({ params }) => {
                         balance: s.balance,
                         equity: s.equity,
                         floatingPL: s.floating_pl || 0
-                    })) || []
+                    })).reverse() || []
                 },
                 rank: await (async () => {
                     if (!stats) return 0;

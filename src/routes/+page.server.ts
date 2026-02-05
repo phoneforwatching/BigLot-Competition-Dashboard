@@ -16,7 +16,7 @@ export const load: PageServerLoad = async () => {
             .from('daily_stats')
             .select(`
                 *,
-                participants (*)
+                participants (nickname)
             `)
             .order('date', { ascending: false })
             .order('points', { ascending: false });
@@ -68,13 +68,7 @@ function processLeaderboardData(data: any[], fromSupabase = false) {
         const equity = fromSupabase ? entry.equity : (entry.equityCurve ? entry.equityCurve[entry.equityCurve.length - 1] : 10000); // Mock fallback
 
         // For Supabase data:
-        const isDisqualified = fromSupabase
-            ? (
-                Number(entry.equity) <= 0 ||
-                (entry.max_drawdown !== null && Number(entry.max_drawdown) >= 99) ||
-                (entry.participants && entry.participants.is_disqualified === true)
-            )
-            : (entry.isDisqualified === true || entry.stats.maxDrawdown > 99 || (entry.equityCurve && entry.equityCurve[entry.equityCurve.length - 1] <= 0));
+        const isDisqualified = fromSupabase ? (entry.equity <= 0) : (entry.stats.maxDrawdown > 99 || (entry.equityCurve && entry.equityCurve[entry.equityCurve.length - 1] <= 0));
 
         return {
             id: fromSupabase ? entry.participant_id : entry.id,
